@@ -2,23 +2,23 @@ package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.hardware.ArmRelease;
-import org.firstinspires.ftc.teamcode.hardware.ColorSensorDevice;
-import org.firstinspires.ftc.teamcode.hardware.LiftClaw;
-import org.firstinspires.ftc.teamcode.hardware.Lights;
-import org.firstinspires.ftc.teamcode.hardware.MecanumDrive2023;
-import org.firstinspires.ftc.teamcode.hardware.MecanumDriveByGyro;
-import org.firstinspires.ftc.teamcode.hardware.RobotDevices;
-import org.firstinspires.ftc.teamcode.util.GamepadEmpty;
+import org.firstinspires.ftc.teamcode.subsystems.ArmReleaseImpl;
+import org.firstinspires.ftc.teamcode.subsystems.ColorSensorDeviceImpl;
+import org.firstinspires.ftc.teamcode.subsystems.ImuDevice;
+import org.firstinspires.ftc.teamcode.subsystems.LiftClaw;
+import org.firstinspires.ftc.teamcode.subsystems.Lights;
+import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveByGyro;
+import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveParameters;
+import org.firstinspires.ftc.teamcode.util.RobotDevices;
 
 public abstract class AutoLinearBase extends LinearOpMode {
 
     protected static final int HOLD_TIME = 1;
-    protected int current_stack_height=LiftClaw.STACK_TOP_PICKUP;
+    protected int current_stack_height= LiftClaw.STACK_TOP_PICKUP;
 
     protected RobotDevices robotDevices;
     protected LiftClaw _liftclaw;
-    protected ArmRelease armRelease;
+    protected ArmReleaseImpl armRelease;
 
     protected MecanumDriveByGyro _move;
 
@@ -30,10 +30,10 @@ public abstract class AutoLinearBase extends LinearOpMode {
     protected static final int LEFT_SIDE=1;
     protected static final int RIGHT_SIDE=2;
 
-    protected ColorSensorDevice colorSensorDeviceLeft, colorSensorDeviceRight;
+    protected ColorSensorDeviceImpl colorSensorDeviceLeft, colorSensorDeviceRight;
 
 
-    public abstract ColorSensorDevice getColorSensorDevice();
+    public abstract ColorSensorDeviceImpl getColorSensorDevice();
     public abstract void strafeDirection(double distance);
     public abstract void strafeAntiDirection(double distance);
     public abstract double turnDirection();
@@ -53,17 +53,17 @@ public abstract class AutoLinearBase extends LinearOpMode {
 
         // set up MovementThread
 
-        colorSensorDeviceLeft = new ColorSensorDevice(robotDevices.colorSensorLeft);
-        colorSensorDeviceRight = new ColorSensorDevice(robotDevices.colorSensorRight);
+        colorSensorDeviceLeft = new ColorSensorDeviceImpl(robotDevices.colorSensorLeft);
+        colorSensorDeviceRight = new ColorSensorDeviceImpl(robotDevices.colorSensorRight);
 
-        MecanumDrive2023.Parameters driveParameters = new MecanumDrive2023.Parameters();
+        MecanumDriveParameters driveParameters = new MecanumDriveParameters();
         driveParameters.motors = robotDevices.wheels;
-        driveParameters._ENCODER_WHEELS = new int[]{0, 1, 2, 3};
-        driveParameters._REVERSED_WHEELS = new int[]{2, 3};
-        driveParameters.robotCentric = true;
-        driveParameters.imu = robotDevices.imu;
+        driveParameters.ENCODER_WHEELS = new int[]{0, 1, 2, 3};
+        driveParameters.REVERSED_WHEELS = new int[]{2, 3};
+        //driveParameters.robotCentric = true;
+        //driveParameters.imu = robotDevices.imu;
         driveParameters.telemetry = telemetry;
-        _move = new MecanumDriveByGyro(driveParameters);
+        _move = new MecanumDriveByGyro(driveParameters, new ImuDevice(robotDevices.imu));
 
         // setup LiftClaw
         _liftclaw = new LiftClaw(
@@ -73,7 +73,6 @@ public abstract class AutoLinearBase extends LinearOpMode {
                 robotDevices.bottom_stop,
                 robotDevices.post_sensor,
                 telemetry,
-                new GamepadEmpty(),
                 light
         );
 

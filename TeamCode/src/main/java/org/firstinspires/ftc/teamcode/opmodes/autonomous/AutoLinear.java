@@ -4,14 +4,14 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.subsystems.hardware.ArmRelease;
-import org.firstinspires.ftc.teamcode.subsystems.hardware.ColorSensorDevice;
-import org.firstinspires.ftc.teamcode.subsystems.hardware.ImuDevice;
-import org.firstinspires.ftc.teamcode.subsystems.hardware.LiftClaw;
-import org.firstinspires.ftc.teamcode.subsystems.hardware.Lights;
-import org.firstinspires.ftc.teamcode.subsystems.hardware.MecanumDriveByGyro;
-import org.firstinspires.ftc.teamcode.subsystems.hardware.MecanumDriveParameters;
-import org.firstinspires.ftc.teamcode.subsystems.hardware.RobotDevices;
+import org.firstinspires.ftc.teamcode.subsystems.ArmReleaseImpl;
+import org.firstinspires.ftc.teamcode.subsystems.ColorSensorDeviceImpl;
+import org.firstinspires.ftc.teamcode.subsystems.ImuDevice;
+import org.firstinspires.ftc.teamcode.subsystems.LiftClaw;
+import org.firstinspires.ftc.teamcode.subsystems.Lights;
+import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveByGyro;
+import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveParameters;
+import org.firstinspires.ftc.teamcode.util.RobotDevices;
 
 @Autonomous(
         name = "Autonomous Mode"
@@ -22,7 +22,7 @@ public class AutoLinear extends LinearOpMode {
 
     protected RobotDevices robotDevices;
     protected LiftClaw _liftclaw;
-    protected ArmRelease armRelease;
+    protected ArmReleaseImpl armRelease;
 
     protected MecanumDriveByGyro _move;
 
@@ -34,10 +34,10 @@ public class AutoLinear extends LinearOpMode {
     protected static final int LEFT_SIDE=1;
     protected static final int RIGHT_SIDE=2;
 
-    protected ColorSensorDevice colorSensorDeviceLeft, colorSensorDeviceRight;
+    protected ColorSensorDeviceImpl colorSensorDeviceLeft, colorSensorDeviceRight;
 
 
-    public ColorSensorDevice getColorSensorDevice() {
+    public ColorSensorDeviceImpl getColorSensorDevice() {
         if (left)
             return colorSensorDeviceRight;
         else
@@ -98,8 +98,8 @@ public class AutoLinear extends LinearOpMode {
 
         // set up MovementThread
 
-        colorSensorDeviceLeft = new ColorSensorDevice(robotDevices.colorSensorLeft);
-        colorSensorDeviceRight = new ColorSensorDevice(robotDevices.colorSensorRight);
+        colorSensorDeviceLeft = new ColorSensorDeviceImpl(robotDevices.colorSensorLeft);
+        colorSensorDeviceRight = new ColorSensorDeviceImpl(robotDevices.colorSensorRight);
 
         MecanumDriveParameters driveParameters = new MecanumDriveParameters();
         driveParameters.motors = robotDevices.wheels;

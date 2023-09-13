@@ -2,9 +2,9 @@ package org.firstinspires.ftc.teamcode.threads;
 
 import com.qualcomm.robotcore.hardware.*;
 import org.firstinspires.ftc.robotcore.external.*;
-import org.firstinspires.ftc.teamcode.subsystems.hardware.DistanceSensorDevice;
-import org.firstinspires.ftc.teamcode.subsystems.hardware.LiftClaw;
-import org.firstinspires.ftc.teamcode.subsystems.hardware.Lights;
+import org.firstinspires.ftc.teamcode.subsystems.DistanceSensorDevice;
+import org.firstinspires.ftc.teamcode.subsystems.LiftClaw;
+import org.firstinspires.ftc.teamcode.subsystems.Lights;
 
 
 public class LiftClawThread extends RobotThread {

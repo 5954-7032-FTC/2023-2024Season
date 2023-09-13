@@ -1,13 +1,12 @@
 package org.firstinspires.ftc.teamcode.util;
 
-public final class Constants<FORWARD_VALUES> {
+public final class Constants {
     //math constants to speed up calculations
     public static final double SQRT2=Math.sqrt(2);
-    public static final double SQRT2_OVER2 = SQRT2/2;
     public static final double PI_OVER4=Math.PI/4;
     public static final double PI_OVER2=Math.PI/2;
     public static final double INCHES_PER_METER=39.3701;
-    public static final double PI_OVER_180=Math.PI/180;
+    //public static final double PI_OVER_180=Math.PI/180;
 
 
     // ARM release and set position

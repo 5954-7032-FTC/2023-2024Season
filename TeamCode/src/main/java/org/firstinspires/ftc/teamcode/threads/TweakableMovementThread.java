@@ -6,8 +6,9 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
-import org.firstinspires.ftc.teamcode.subsystems.hardware.MecanumDriveImpl;
-import org.firstinspires.ftc.teamcode.subsystems.hardware.MecanumDriveParameters;
+import org.firstinspires.ftc.teamcode.subsystems.MecanumDrive;
+import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveImpl;
+import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveParameters;
 import org.firstinspires.ftc.teamcode.util.motorRampProfile;
 
 import org.firstinspires.ftc.teamcode.util.Debounce;
@@ -35,8 +36,8 @@ public class TweakableMovementThread extends RobotThread {
     TweakableBoolean _robot_centric = new TweakableBoolean("RobotCentricDrive", true);
     TweakableDouble _fine_control = new TweakableDouble("FineControl", 0.05,0.55);
     TweakableLong _debounce_delay_ms = new TweakableLong("Button Debounce Delay", 20, 150);
-    TweakableDouble speed_factor = new TweakableDouble("Speed Factor",0.04,1.4);
-    Tweakable _load_save = new Tweakable("<--LOAD / SAVE --") {
+    TweakableDouble _speed_factor = new TweakableDouble("Speed Factor",0.04,1.4);
+    Tweakable _load_save = new Tweakable("<--LOAD(up) / SAVE(down) --") {
             @Override
             public void adjustUp() {
             // load from config
@@ -51,6 +52,8 @@ public class TweakableMovementThread extends RobotThread {
                 _ramp_rate_J2X.value = Double.parseDouble(props.getProperty("_ramp_rate_J2X"));
                 _robot_centric.value = Boolean.parseBoolean(props.getProperty("_robot_centric"));
                 _fine_control.value  = Double.parseDouble(props.getProperty("_fine_control"));
+                _debounce_delay_ms.value = Long.parseLong(props.getProperty("_debounce_delay_ms"));
+                _speed_factor.value = Double.parseDouble(props.getProperty("_speed_factor"));
             } catch (Exception ex) {
                 // something wrong here
                 _telemetry.log().add("Error loading config!" + config+" "+ex.getMessage());
@@ -68,6 +71,8 @@ public class TweakableMovementThread extends RobotThread {
                 props.setProperty("_ramp_rate_J2X", _ramp_rate_J2X.toString());
                 props.setProperty("_robot_centric", _robot_centric.toString());
                 props.setProperty("_fine_control ", _fine_control.toString());
+                props.setProperty("_debounce_delay_ms ", _debounce_delay_ms.toString());
+                props.setProperty("_speed_factor ", _speed_factor.toString());
                 FileWriter writer = new FileWriter(AppUtil.getInstance().getSettingsFile(config));
                 props.store(writer,"robot settings");
                 writer.close();
@@ -80,7 +85,7 @@ public class TweakableMovementThread extends RobotThread {
 
 
 
-    private MecanumDriveImpl drive;
+    private MecanumDrive drive;
 
 
     Debounce dpad_up,dpad_down,dpad_left,dpad_right;

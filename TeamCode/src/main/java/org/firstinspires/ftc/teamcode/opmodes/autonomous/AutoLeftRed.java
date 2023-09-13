@@ -2,9 +2,9 @@ package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.hardware.ColorSensorDevice;
-import org.firstinspires.ftc.teamcode.hardware.LightRed;
-import org.firstinspires.ftc.teamcode.hardware.Lights;
+import org.firstinspires.ftc.teamcode.subsystems.ColorSensorDeviceImpl;
+//import org.firstinspires.ftc.teamcode.subsystems.hardware.LightRed;
+import org.firstinspires.ftc.teamcode.subsystems.Lights;
 
 @Autonomous(name = "Auto-Left-RED")
 public class AutoLeftRed extends AutoLinearBase {
@@ -19,7 +19,7 @@ public class AutoLeftRed extends AutoLinearBase {
     }
 
     @Override
-    public ColorSensorDevice getColorSensorDevice() {
+    public ColorSensorDeviceImpl getColorSensorDevice() {
         return colorSensorDeviceRight;
     }
 
@@ -40,6 +40,6 @@ public class AutoLeftRed extends AutoLinearBase {
 
     @Override
     public Lights getLight() {
-        return new LightRed(hardwareMap.dcMotor.get("LIGHTS"));
+        return new Lights(hardwareMap.dcMotor.get("LIGHTS")){public void on() {light.redOn();}};
     }
 }

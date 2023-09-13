@@ -26,5 +26,7 @@ public class Debounce {
         this._debounceDelay = _delayms;
     }
 
-
+    public long get_debounceDelay() {
+        return _debounceDelay;
+    }
 }

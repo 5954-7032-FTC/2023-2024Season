@@ -4,9 +4,9 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.subsystems.hardware.ArmRelease;
-import org.firstinspires.ftc.teamcode.subsystems.hardware.Lights;
-import org.firstinspires.ftc.teamcode.subsystems.hardware.RobotDevices;
+import org.firstinspires.ftc.teamcode.subsystems.ArmReleaseImpl;
+import org.firstinspires.ftc.teamcode.subsystems.Lights;
+import org.firstinspires.ftc.teamcode.util.RobotDevices;
 import org.firstinspires.ftc.teamcode.threads.LiftClawThread;
 import org.firstinspires.ftc.teamcode.threads.TweakableMovementThread;
 
@@ -16,7 +16,7 @@ public abstract class ThreadedTeleOp extends OpMode {
 
     TweakableMovementThread _move;
     LiftClawThread _liftclaw;
-    ArmRelease _armRelease;
+    ArmReleaseImpl _armRelease;
     Lights _light;
 
     Telemetry.Item _threadCount;//,_bot_cone;
@@ -48,7 +48,7 @@ public abstract class ThreadedTeleOp extends OpMode {
         _threadCount = telemetry.addData("Threads", Thread.activeCount());
         //_bot_cone = telemetry.addData("Bottom_cone", bottom_cone.getDistanceMM());
 
-        _armRelease =  new ArmRelease(hardwareMap.servo.get("ARM_RELEASE"));
+        _armRelease =  new ArmReleaseImpl(hardwareMap.servo.get("ARM_RELEASE"));
 
     }
 
