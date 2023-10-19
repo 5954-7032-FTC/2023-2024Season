@@ -18,18 +18,31 @@ import org.firstinspires.ftc.teamcode.subsystems.DistanceSensorDevice;
 */
 public class RobotDevices {
 
-    public ColorSensor colorSensorLeft,colorSensorRight;
+    //public ColorSensor colorSensorLeft,colorSensorRight;
     public DcMotor [] wheels;
-    public Servo[] lift_servos;
+    public DcMotor [] armLift;
+    public DcMotor lowBelt;
+    public DcMotor highBelt;
     public BNO055IMU imu;
-    public DcMotor lift_motor;
-    public TouchSensor bottom_stop;
-    public DistanceSensorDevice post_sensor;//,bottom_cone;
-
-    public ArmReleaseImpl arm_release;
 
 
-   // public ColorSensor cone_detector;
+    public ColorSensor colorSensorFront, colorSensorBack;
+    public TouchSensor upperArmLimit, lowerArmLimit;
+    public Servo[] intakeServos;
+    public Servo pixelFloor;
+    public Servo droneRelease;
+    public DistanceSensorDevice frontSensor, rearSensor;
+    public Servo pixelHold0, pixelHold1;
+
+
+    //public ArmReleaseImpl arm_release;
+
+
+    // public ColorSensor cone_detector;
+    //public Servo[] lift_servos;
+    //public DcMotor lift_motor;
+    //public TouchSensor bottom_stop;
+    //public DistanceSensorDevice post_sensor;//,bottom_cone;
 
     protected static RobotDevices robotDevices;
 
@@ -41,22 +54,38 @@ public class RobotDevices {
     }
 
     private RobotDevices(HardwareMap hardwareMap) {
-        colorSensorRight = hardwareMap.colorSensor.get("RIGHT_COLOR");
-        colorSensorLeft = hardwareMap.colorSensor.get("LEFT_COLOR");
+        //colorSensorRight = hardwareMap.colorSensor.get("RIGHT_COLOR");
+        //colorSensorLeft = hardwareMap.colorSensor.get("LEFT_COLOR");
         wheels = new DcMotor[]{
-                hardwareMap.dcMotor.get("D_FR"),
-                hardwareMap.dcMotor.get("D_RR"),
-                hardwareMap.dcMotor.get("D_RL"),
-                hardwareMap.dcMotor.get("D_FL")
+                hardwareMap.dcMotor.get("D_MOT_FR"),
+                hardwareMap.dcMotor.get("D_MOT_RR"),
+                hardwareMap.dcMotor.get("D_MOT_RL"),
+                hardwareMap.dcMotor.get("D_MOT_FL")
         };
         imu = hardwareMap.get(BNO055IMU.class, "imu");
-        lift_motor = hardwareMap.dcMotor.get("LIFT");
-        lift_servos = new Servo[]{
-                hardwareMap.servo.get("CLAW0"),
-                hardwareMap.servo.get("CLAW1")
+
+
+        armLift = new DcMotor[] {
+                hardwareMap.dcMotor.get("ARM_MOT0"),
+                hardwareMap.dcMotor.get("ARM_MOT1")
         };
-        bottom_stop = hardwareMap.touchSensor.get("BSTOP");
-        post_sensor = new DistanceSensorDevice(hardwareMap.get(DistanceSensor.class, "C_STOP"));
-        arm_release = new ArmReleaseImpl(hardwareMap.servo.get("ARM_RELEASE"));
+        lowBelt =  hardwareMap.dcMotor.get("BELT_MOT_LOW");
+        highBelt = hardwareMap.dcMotor.get("BELT_MOT_HIGH");
+
+
+        colorSensorFront = hardwareMap.colorSensor.get("FRONT_COLOR");
+        colorSensorBack = hardwareMap.colorSensor.get("BACK_COLOR");
+        upperArmLimit = hardwareMap.touchSensor.get("ARM_UPPER_LIMIT");
+        lowerArmLimit = hardwareMap.touchSensor.get("ARM_LOWER_LIMIT");
+        intakeServos = new Servo[] {
+                hardwareMap.servo.get("INTAKE0"),
+                hardwareMap.servo.get("INTAKE1")
+        };
+        pixelFloor = hardwareMap.servo.get("PIXEL_SERVO");
+        droneRelease = hardwareMap.servo.get("DRONE_RELEASE");
+        frontSensor = new DistanceSensorDevice(hardwareMap.get(DistanceSensor.class, "FRONT_SENSOR"));
+        rearSensor = new DistanceSensorDevice(hardwareMap.get(DistanceSensor.class, "REAR_SENSOR"));
+        pixelHold0 = hardwareMap.servo.get("PIXEL_HOLD0");
+        pixelHold1 = hardwareMap.servo.get("PIXEL_HOLD1");
     }
 }

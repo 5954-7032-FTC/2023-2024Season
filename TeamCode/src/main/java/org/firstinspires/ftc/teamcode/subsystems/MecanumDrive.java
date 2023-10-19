@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 public interface MecanumDrive extends SubSystem,DriveSystem {
-
+    public void moveRect(double forward, double lateral, double rotate);
+    public void movePolar(double power, double angle, double rotate);
 }

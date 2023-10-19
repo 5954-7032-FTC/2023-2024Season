@@ -91,14 +91,7 @@ public class MecanumDriveByGyro extends MecanumDriveImpl implements DriveRobot, 
         //init();
         this.imu = imu;
         imu.resetHeading();
-        //motor directions RF, RR, LR, LF, rotate
-        /*
-        FORWARD_VALUES = new int[]{ 1, 1, 1, 1,1};
-        REVERSE_VALUES = new int[]{-1, -1, -1, -1,-1};
-        LATERAL_LEFT_VALUES = new int[]{1,-1,1,-1,1};
-        LATERAL_RIGHT_VALUES = new int[]{-1,1,-1,1,1};
-        ROTATE_VALUES = new int[]{1,1,-1,-1};
-*/
+
         T_angle = _telemetry.addData("Heading","");
     }
 
@@ -129,9 +122,7 @@ public class MecanumDriveByGyro extends MecanumDriveImpl implements DriveRobot, 
     }
 
     @Override
-    public void driveRight(double distance) {
-        driveRobot(distance, Constants.LATERAL_RIGHT_VALUES);
-    }
+    public void driveRight(double distance) { driveRobot(distance, Constants.LATERAL_RIGHT_VALUES);}
 
     public void driveRobot(double inches, int [] direction) {
         // Determine new target position, and pass to motor controller

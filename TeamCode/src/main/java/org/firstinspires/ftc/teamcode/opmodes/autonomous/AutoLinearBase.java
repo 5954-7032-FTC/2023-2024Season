@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.subsystems.ArmReleaseImpl;
 import org.firstinspires.ftc.teamcode.subsystems.ColorSensorDeviceImpl;
 import org.firstinspires.ftc.teamcode.subsystems.ImuDevice;
-import org.firstinspires.ftc.teamcode.subsystems.LiftClaw;
 import org.firstinspires.ftc.teamcode.subsystems.Lights;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveByGyro;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveParameters;
@@ -14,10 +13,10 @@ import org.firstinspires.ftc.teamcode.util.RobotDevices;
 public abstract class AutoLinearBase extends LinearOpMode {
 
     protected static final int HOLD_TIME = 1;
-    protected int current_stack_height= LiftClaw.STACK_TOP_PICKUP;
+    protected int current_stack_height= 0;//LiftClaw.STACK_TOP_PICKUP;
 
     protected RobotDevices robotDevices;
-    protected LiftClaw _liftclaw;
+    //protected LiftClaw _liftclaw;
     protected ArmReleaseImpl armRelease;
 
     protected MecanumDriveByGyro _move;
@@ -53,8 +52,8 @@ public abstract class AutoLinearBase extends LinearOpMode {
 
         // set up MovementThread
 
-        colorSensorDeviceLeft = new ColorSensorDeviceImpl(robotDevices.colorSensorLeft);
-        colorSensorDeviceRight = new ColorSensorDeviceImpl(robotDevices.colorSensorRight);
+        //colorSensorDeviceLeft = new ColorSensorDeviceImpl(robotDevices.colorSensorLeft);
+        //colorSensorDeviceRight = new ColorSensorDeviceImpl(robotDevices.colorSensorRight);
 
         MecanumDriveParameters driveParameters = new MecanumDriveParameters();
         driveParameters.motors = robotDevices.wheels;
@@ -65,18 +64,9 @@ public abstract class AutoLinearBase extends LinearOpMode {
         driveParameters.telemetry = telemetry;
         _move = new MecanumDriveByGyro(driveParameters, new ImuDevice(robotDevices.imu));
 
-        // setup LiftClaw
-        _liftclaw = new LiftClaw(
-                robotDevices.lift_motor,
-                robotDevices.lift_servos,
-                //robotDevices.pipe_guide,
-                robotDevices.bottom_stop,
-                robotDevices.post_sensor,
-                telemetry,
-                light
-        );
 
-        armRelease = robotDevices.arm_release;
+
+        //armRelease = robotDevices.arm_release;
 
 
         _move.resetHeading();
@@ -101,9 +91,9 @@ public abstract class AutoLinearBase extends LinearOpMode {
     public void runLeft() throws InterruptedException {
         // first put the arm up.
         armRelease.release();
-        _liftclaw.calibrateLift();
+  /*      _liftclaw.calibrateLift();
         Thread.sleep(1500);
-        _liftclaw.runToPos(LiftClaw.LOW_POS);
+        _liftclaw.runToPos(LiftClaw.LOW_POS);*/
 
         double forward_amount=0,
                 strafe_amount=0;
@@ -152,9 +142,9 @@ public abstract class AutoLinearBase extends LinearOpMode {
     public void runRight() throws InterruptedException {
         // first put the arm up.
         armRelease.release();
-        _liftclaw.calibrateLift();
+/*        _liftclaw.calibrateLift();
         Thread.sleep(1500);
-        _liftclaw.runToPos(LiftClaw.LOW_POS);
+        _liftclaw.runToPos(LiftClaw.LOW_POS);*/
 
         double forward_amount=0,
                 strafe_amount=0;
@@ -221,14 +211,14 @@ public abstract class AutoLinearBase extends LinearOpMode {
     }
 
     public void pickNextCone() {
-        _liftclaw.clawClose();
+/*        _liftclaw.clawClose();
         _liftclaw.runToPos(current_stack_height); // pick up cone
-        _liftclaw.runToPos(LiftClaw.LOW_POS);
+        _liftclaw.runToPos(LiftClaw.LOW_POS);*/
         updateStackHeight();
     }
 
     public void placeCone(long pos) {
-        _liftclaw.clawOpen();
+        //_liftclaw.clawOpen();
         /*
         _liftclaw.placeCone();
         _liftclaw.clawOpen();
@@ -241,7 +231,7 @@ public abstract class AutoLinearBase extends LinearOpMode {
     }
 
     public void updateStackHeight() {
-        current_stack_height -= LiftClaw.STACK_INCREMENT;
+        current_stack_height -= 0; //LiftClaw.STACK_INCREMENT;
     }
 
 }

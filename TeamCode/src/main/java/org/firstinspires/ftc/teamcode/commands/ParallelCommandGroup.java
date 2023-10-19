@@ -18,7 +18,6 @@ public class ParallelCommandGroup implements CommandGroup {
         for (Thread command : commands) {
             command.start();
         }
-
     }
 
     @Override

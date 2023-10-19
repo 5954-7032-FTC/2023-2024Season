@@ -7,7 +7,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.subsystems.ArmReleaseImpl;
 import org.firstinspires.ftc.teamcode.subsystems.Lights;
 import org.firstinspires.ftc.teamcode.util.RobotDevices;
-import org.firstinspires.ftc.teamcode.threads.LiftClawThread;
 import org.firstinspires.ftc.teamcode.threads.TweakableMovementThread;
 
 
@@ -15,7 +14,7 @@ import org.firstinspires.ftc.teamcode.threads.TweakableMovementThread;
 public abstract class ThreadedTeleOp extends OpMode {
 
     TweakableMovementThread _move;
-    LiftClawThread _liftclaw;
+    //LiftClawThread _liftclaw;
     ArmReleaseImpl _armRelease;
     Lights _light;
 
@@ -35,7 +34,7 @@ public abstract class ThreadedTeleOp extends OpMode {
 
         _light = getLights();
 
-        _liftclaw = new LiftClawThread(
+/*        _liftclaw = new LiftClawThread(
                 robotDevices.lift_motor,
                 robotDevices.lift_servos,
                 robotDevices.bottom_stop,
@@ -43,7 +42,7 @@ public abstract class ThreadedTeleOp extends OpMode {
                 telemetry,
                 gamepad2,
                 _light
-                );
+                );*/
 
         _threadCount = telemetry.addData("Threads", Thread.activeCount());
         //_bot_cone = telemetry.addData("Bottom_cone", bottom_cone.getDistanceMM());
@@ -59,7 +58,7 @@ public abstract class ThreadedTeleOp extends OpMode {
 
     @Override
     public void start() {
-        _liftclaw.start();
+        //_liftclaw.start();
         _move.start();
     }
 
@@ -83,7 +82,7 @@ public abstract class ThreadedTeleOp extends OpMode {
         super.stop();
         _light.off();
         _move.cancel();
-        _liftclaw.cancel();
+        //_liftclaw.cancel();
     }
 
 

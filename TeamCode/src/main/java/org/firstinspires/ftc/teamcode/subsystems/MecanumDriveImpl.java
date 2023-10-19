@@ -47,13 +47,13 @@ public class MecanumDriveImpl implements MecanumDrive {
 
         // set up telemetry objects:
         T_FrontRightSpeed = _telemetry.addData("FRS","0");
-        T_FrontLeftSpeed = _telemetry.addData("FLS","");
-        T_RearRightSpeed = _telemetry.addData("RRS","");
-        T_RearLeftSpeed = _telemetry.addData("RLS","");
-        T_FrontRightPosition = _telemetry.addData("FRP","");
-        T_FrontLeftPosition = _telemetry.addData("FLP","");
-        T_RearRightPosition = _telemetry.addData("RRP","");
-        T_RearLeftPosition = _telemetry.addData("RLP","");
+        T_FrontLeftSpeed = _telemetry.addData("FLS","0");
+        T_RearRightSpeed = _telemetry.addData("RRS","0");
+        T_RearLeftSpeed = _telemetry.addData("RLS","0");
+        T_FrontRightPosition = _telemetry.addData("FRP","0");
+        T_FrontLeftPosition = _telemetry.addData("FLP","0");
+        T_RearRightPosition = _telemetry.addData("RRP","0");
+        T_RearLeftPosition = _telemetry.addData("RLP","0");
 
     }
 
@@ -89,14 +89,14 @@ public class MecanumDriveImpl implements MecanumDrive {
     public void outputTelemetry(MecanumDriveTelemetryTypes type) {
         switch (type) {
             case WHEEL_SPEEDS:
-                double speeds []  = readSpeeds();
+                double [] speeds  = readSpeeds();
                 T_RearLeftSpeed.setValue(speeds[WheelPositions.RearLeft.position]);
                 T_RearRightSpeed.setValue(speeds[WheelPositions.RearRight.position]);
                 T_FrontLeftSpeed.setValue(speeds[WheelPositions.FrontLeft.position]);
                 T_FrontRightSpeed.setValue(speeds[WheelPositions.FrontRight.position]);
                 break;
             case WHEEL_POSITIONS:
-                int encoders []  = readEncoders();
+                int [] encoders  = readEncoders();
                 T_RearLeftPosition.setValue(encoders[WheelPositions.RearLeft.position]);
                 T_RearRightPosition.setValue(encoders[WheelPositions.RearRight.position]);
                 T_FrontLeftPosition.setValue(encoders[WheelPositions.FrontLeft.position]);
