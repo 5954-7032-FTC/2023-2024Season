@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.subsystems.ArmReleaseImpl;
 import org.firstinspires.ftc.teamcode.subsystems.ColorSensorDeviceImpl;
 import org.firstinspires.ftc.teamcode.subsystems.ImuDevice;
 import org.firstinspires.ftc.teamcode.subsystems.Lights;
@@ -17,7 +16,7 @@ public abstract class AutoLinearBase extends LinearOpMode {
 
     protected RobotDevices robotDevices;
     //protected LiftClaw _liftclaw;
-    protected ArmReleaseImpl armRelease;
+    // protected ArmReleaseImpl armRelease;
 
     protected MecanumDriveByGyro _move;
 
@@ -90,7 +89,7 @@ public abstract class AutoLinearBase extends LinearOpMode {
 
     public void runLeft() throws InterruptedException {
         // first put the arm up.
-        armRelease.release();
+        //armRelease.release();
   /*      _liftclaw.calibrateLift();
         Thread.sleep(1500);
         _liftclaw.runToPos(LiftClaw.LOW_POS);*/
@@ -141,7 +140,7 @@ public abstract class AutoLinearBase extends LinearOpMode {
 
     public void runRight() throws InterruptedException {
         // first put the arm up.
-        armRelease.release();
+        //armRelease.release();
 /*        _liftclaw.calibrateLift();
         Thread.sleep(1500);
         _liftclaw.runToPos(LiftClaw.LOW_POS);*/
