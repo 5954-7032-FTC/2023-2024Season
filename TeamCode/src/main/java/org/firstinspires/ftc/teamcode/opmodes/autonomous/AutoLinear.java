@@ -223,7 +223,7 @@ public class AutoLinear extends LinearOpMode {
         // move to the cone
         strafeDirection(22); // should put us clearly on the cone
         //get the place to end from the findMaxColor()
-        int place_to_end = getColorSensorDevice().findMaxColor();
+        int place_to_end = getColorSensorDevice().findMaxColor().value;
         telemetry.log().add("Place to end: "+place_to_end);
         telemetry.update();
         // now to move around a bit...
@@ -272,7 +272,7 @@ public class AutoLinear extends LinearOpMode {
         // move to the cone
         strafeDirection(22); // should put us clearly on the cone
         //get the place to end from the findMaxColor()
-        int place_to_end = getColorSensorDevice().findMaxColor();
+        int place_to_end = getColorSensorDevice().findMaxColor().value;
         telemetry.log().add("Place to end: "+place_to_end);
         telemetry.update();
         // now to move around a bit...

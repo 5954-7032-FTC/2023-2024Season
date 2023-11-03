@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
@@ -8,7 +9,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.Constants;
 import org.firstinspires.ftc.teamcode.util.WheelPositions;
 
-public class MecanumDriveImpl implements MecanumDrive {
+public class MecanumDriveOdomoterImpl implements MecanumDrive {
 
     protected DcMotor [] _motors;
     protected Telemetry _telemetry;
@@ -16,29 +17,35 @@ public class MecanumDriveImpl implements MecanumDrive {
     protected int [] _ENCODER_WHEELS; // encoder wheels (RIGHT, LEFT)
     protected int [] _REVERSED_WHEELS; // reversed motors list
 
+    protected BNO055IMU imu;
+
 
     protected Telemetry.Item T_FrontRightSpeed, T_FrontLeftSpeed, T_RearRightSpeed,
             T_RearLeftSpeed, T_FrontRightPosition, T_FrontLeftPosition, T_RearRightPosition, T_RearLeftPosition;
 
 
-    public MecanumDriveImpl(MecanumDriveParameters parameters) {
-        init(parameters.motors,parameters.telemetry,parameters.FREE_WHEELS,parameters.ENCODER_WHEELS,parameters.REVERSED_WHEELS);
+    public MecanumDriveOdomoterImpl(MecanumDriveParameters parameters) {
+        init(parameters.motors,parameters.telemetry,
+                parameters.FREE_WHEELS,parameters.ENCODER_WHEELS,
+                parameters.REVERSED_WHEELS,parameters.imu);
     }
 
-    public MecanumDriveImpl(DcMotor[] motors, Telemetry telemetry,
-                int[] FREE_WHEELS, int[] ENCODER_WHEELS, int[] REVERSED_WHEELS) {
-        init(motors,telemetry,FREE_WHEELS,ENCODER_WHEELS,REVERSED_WHEELS);
+    public MecanumDriveOdomoterImpl(DcMotor[] motors, Telemetry telemetry,
+                                    int[] FREE_WHEELS, int[] ENCODER_WHEELS, int[] REVERSED_WHEELS, BNO055IMU imu) {
+        init(motors,telemetry,FREE_WHEELS,ENCODER_WHEELS,REVERSED_WHEELS,imu);
     }
 
 
 
     protected void init(DcMotor[] _motors, Telemetry _telemetry,
-                            int[] _FREE_WHEELS, int[] _ENCODER_WHEELS, int[] _REVERSED_WHEELS) {
+                            int[] _FREE_WHEELS, int[] _ENCODER_WHEELS, int[] _REVERSED_WHEELS,
+                        BNO055IMU _imu) {
         this._motors = _motors;
         this._telemetry = _telemetry;
         this._FREE_WHEELS = _FREE_WHEELS;
         this._ENCODER_WHEELS = _ENCODER_WHEELS;
         this._REVERSED_WHEELS = _REVERSED_WHEELS;
+        this.imu = _imu;
         setRunMode(_FREE_WHEELS, DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         setRunMode(_ENCODER_WHEELS, DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setRunMode(_ENCODER_WHEELS, DcMotor.RunMode.RUN_USING_ENCODER);

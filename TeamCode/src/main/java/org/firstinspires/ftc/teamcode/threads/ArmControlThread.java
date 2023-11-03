@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.threads;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -10,7 +9,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubSystem;
 import org.firstinspires.ftc.teamcode.util.Constants;
 import org.firstinspires.ftc.teamcode.util.Debounce;
-import org.firstinspires.ftc.teamcode.util.Tweakable;
 import org.firstinspires.ftc.teamcode.util.motorRampProfile;
 
 public class ArmControlThread extends RobotThread {
@@ -21,6 +19,8 @@ public class ArmControlThread extends RobotThread {
     private Gamepad _gamepad;
 
     private Debounce _buttonA;
+
+    private Telemetry.Item _T_Intake_Speed;
 
     public ArmControlThread(Gamepad gamepad, Telemetry telemetry,
                             CRServo[] intake_servos, DcMotor lowerBeltMotor, DcMotor upperBeltMotor, DcMotor[] bendMotors, TouchSensor upperArmLimit, TouchSensor lowerArmLimit) {
@@ -35,6 +35,8 @@ public class ArmControlThread extends RobotThread {
 
         _telemetry = telemetry;
 
+        _T_Intake_Speed = _telemetry.addData("IntakeSpeed",0.0);
+
         _buttonA = new Debounce(150);
 
     }
@@ -45,8 +47,23 @@ public class ArmControlThread extends RobotThread {
             // right joystick up/down controls the bend amount
 
             // TODO set dead zone
-            // if right stick is pushed more than 20% and neither limit switch is triggered, apply power, else 0.
-            if ( Math.abs(_gamepad.right_stick_y)  > Constants.armControlDeadzone &&  ! ( _armSubSystem.lowerArmLimit() || _armSubSystem.upperArmLimit() ) ) {
+            /* Logic for allowing the arm to move:
+            ** stick must be larger than the deadzone
+            * OR
+            ** if upper arm limit is triggered AND stick is negative, move
+            ** if lower arm limit is trriggered AND stick is positive, move
+            */
+            if ( Math.abs(_gamepad.right_stick_y)  > Constants.armControlDeadzone
+                    && ! (
+                         _armSubSystem.lowerArmLimit() || _armSubSystem.upperArmLimit()
+                    )
+                ||
+                    (
+                    (_gamepad.right_stick_y < 0 && _armSubSystem.upperArmLimit())
+                    ||
+                    (_gamepad.right_stick_y > 0 && _armSubSystem.lowerArmLimit())
+                    )
+            ) {
                     _armSubSystem.moveArm(_Joy2Y.ramp(_gamepad.right_stick_y));
             }
             else {
@@ -54,22 +71,22 @@ public class ArmControlThread extends RobotThread {
             }
 
             // TODO set dead zone
-            if (_gamepad.right_trigger>Constants.armControlDeadzone) {
-                _armSubSystem.intakeForward();
-                _armSubSystem.beltPower(0.5);
+            // left trigger spit out mouth
+            if (_gamepad.left_trigger>Constants.armControlDeadzone) {
+                _armSubSystem.intakeReverse();
+                _armSubSystem.beltPower(0.5,_armSubSystem.lowerArmLimit());
+                continue;
             }
 
             // TODO set dead zone
-            if (_gamepad.left_trigger>Constants.armControlDeadzone) {
-                _armSubSystem.intakeReverse();
-                _armSubSystem.beltPower(-0.5);
+            // suck into robot
+            if (_gamepad.right_trigger>Constants.armControlDeadzone) {
+                _armSubSystem.intakeForward();
+                _armSubSystem.beltPower(-1.0,_armSubSystem.lowerArmLimit());
+                continue;
             }
-
-            /* TODO set dead zone
-            if (_gamepad.left_stick_y > Constants.armControlDeadzone) {
-                _armSubSystem.beltPower(_Joy1Y.ramp(_gamepad.left_stick_y));
-            }
-            */
+            _armSubSystem.beltPower(0.0,false);
+            _armSubSystem.intakeStop();
 
 
         }

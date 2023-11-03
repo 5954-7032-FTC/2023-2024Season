@@ -62,7 +62,9 @@ public class RobotDevices {
                 hardwareMap.dcMotor.get("D_MOT_RL"),
                 hardwareMap.dcMotor.get("D_MOT_FL")
         };
+
         imu = hardwareMap.get(BNO055IMU.class, "imu");
+
 
 
         armLift = new DcMotor[] {
@@ -84,20 +86,23 @@ public class RobotDevices {
         };
         droneRelease = hardwareMap.servo.get("DRONE_RELEASE");
 
-        pixelFloor = new Servo[]{
+        /*pixelFloor = new Servo[]{
                 hardwareMap.servo.get("PIXEL_SERVO"),
                 hardwareMap.servo.get("PIXEL_SERV1")
-        };
+        };*/
 
+        /*
         sensorServos = new Servo[] {
+
                 hardwareMap.servo.get("FRONT_SENSOR_SERVO"),
                 hardwareMap.servo.get("REAR_SENSOR_SERVO")
 
-        };
+        };*/
         //frontSensor = new DistanceSensorDevice(hardwareMap.get(DistanceSensor.class, "FRONT_SENSOR"));
         //rearSensor = new DistanceSensorDevice(hardwareMap.get(DistanceSensor.class, "REAR_SENSOR"));
-        pixelHold0 = hardwareMap.servo.get("PIXEL_HOLD0");
-        pixelHold1 = hardwareMap.servo.get("PIXEL_HOLD1");
+        //pixelHold0 = hardwareMap.servo.get("PIXEL_HOLD0");
+        //pixelHold1 = hardwareMap.servo.get("PIXEL_HOLD1");
+
 
             /*
     ** Arm consists of several parts
@@ -121,7 +126,7 @@ public class RobotDevices {
         upperArmLimit = hardwareMap.touchSensor.get("ARM_UPPER_LIMIT");
         lowerArmLimit = hardwareMap.touchSensor.get("ARM_LOWER_LIMIT");
 
-
+     1-4 done
 
     * 5. Color Sensor for auto
         colorSensorFront = hardwareMap.colorSensor.get("FRONT_COLOR");

@@ -29,9 +29,8 @@ public class ArmSubSystem implements SubSystem {
     }
 
     private void init() {
-        for (CRServo servo : _intake_servos) {
-            servo.setDirection(DcMotorSimple.Direction.FORWARD);
-        }
+        _intake_servos[0].setDirection(DcMotorSimple.Direction.REVERSE);
+        _intake_servos[1].setDirection(DcMotorSimple.Direction.FORWARD);
         _lowerBeltMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         _lowerBeltMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         _upperBeltMotor.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -44,20 +43,31 @@ public class ArmSubSystem implements SubSystem {
     }
 
     public void intakeStop() {
-        for (CRServo servo: _intake_servos) {
+        /*for (CRServo servo: _intake_servos) {
             servo.setPower(0);
         }
+        */
+        _intake_servos[0].setPower(0);
+        _intake_servos[1].setPower(0);
     }
 
-    public void intakeReverse() {
-        for (CRServo servo: _intake_servos) {
-            servo.setPower(-1);
-        }
-    }
     public void intakeForward() {
+        /*
         for (CRServo servo: _intake_servos) {
-            servo.setPower(1);
+            servo.setPower(-0.5);
         }
+        */
+        _intake_servos[0].setPower(-0.5);
+        _intake_servos[1].setPower(-0.5);
+    }
+    public void intakeReverse() {
+        /*
+        for (CRServo servo: _intake_servos) {
+            servo.setPower(0.5);
+        }
+         */
+        _intake_servos[0].setPower(0.5);
+        _intake_servos[1].setPower(0.5);
     }
 
     private void lowerBeltPower(double power) {
@@ -68,9 +78,9 @@ public class ArmSubSystem implements SubSystem {
         _upperBeltMotor.setPower(power);
     }
 
-    public void beltPower(double power) {
+    public void beltPower(double power, boolean reverse) {
         lowerBeltPower(power);
-        upperBeltPower(power);
+        upperBeltPower(reverse?-power:power);
     }
 
     public void moveArm(double power) {

@@ -119,7 +119,7 @@ public class TweakableMovementThread extends RobotThread {
         //riveParameters.imu = imu;
         driveParameters.telemetry = telemetry;
         driveParameters.motors = motors;
-        driveParameters.ENCODER_WHEELS = new int[]{};
+        driveParameters.ENCODER_WHEELS = new int[]{0,1,2,3};
         driveParameters.FREE_WHEELS = new int[]{0, 1, 2, 3};
         driveParameters.REVERSED_WHEELS = new int[]{2, 3};
         drive = new MecanumDriveImpl(driveParameters);
@@ -193,7 +193,7 @@ public class TweakableMovementThread extends RobotThread {
 
     public void run() {
         while (!isCancelled()) {
-            if (includeTweaks) checkTweaks();
+            //if (includeTweaks) checkTweaks();
             if (_gamepad.right_trigger > 0.2) {
                 drive.moveRect(
                         _Joy1Y.ramp(deadzone(_gamepad.left_stick_y*_fine_control.value,_zone_forward.value)),
