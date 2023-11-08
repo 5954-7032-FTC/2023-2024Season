@@ -1,7 +1,8 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-public enum MecanumDriveTelemetryTypes {
+public enum TelemetryTypes {
     WHEEL_POSITIONS,
     WHEEL_SPEEDS,
-    HEADING
+    FIELD_POSITION,
+    IMU
 }

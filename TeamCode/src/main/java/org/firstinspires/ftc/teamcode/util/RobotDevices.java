@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
@@ -31,7 +32,8 @@ public class RobotDevices {
     public CRServo[] intakeServos;
     public Servo[] pixelFloor;
     public Servo droneRelease;
-    public Servo[] sensorServos;//frontSensor, rearSensor;
+    public Servo[] sensorServos;
+    public DistanceSensor frontSensor, rearSensor;
     public Servo pixelHold0, pixelHold1;
 
 
@@ -86,23 +88,23 @@ public class RobotDevices {
         };
         droneRelease = hardwareMap.servo.get("DRONE_RELEASE");
 
-        /*pixelFloor = new Servo[]{
-                hardwareMap.servo.get("PIXEL_SERVO"),
-                hardwareMap.servo.get("PIXEL_SERV1")
-        };*/
+        pixelFloor = new Servo[]{
+                hardwareMap.servo.get("PIXEL_HOLD0"),
+                hardwareMap.servo.get("PIXEL_HOLD1")
+        };
 
-        /*
         sensorServos = new Servo[] {
 
                 hardwareMap.servo.get("FRONT_SENSOR_SERVO"),
                 hardwareMap.servo.get("REAR_SENSOR_SERVO")
 
-        };*/
-        //frontSensor = new DistanceSensorDevice(hardwareMap.get(DistanceSensor.class, "FRONT_SENSOR"));
-        //rearSensor = new DistanceSensorDevice(hardwareMap.get(DistanceSensor.class, "REAR_SENSOR"));
-        //pixelHold0 = hardwareMap.servo.get("PIXEL_HOLD0");
-        //pixelHold1 = hardwareMap.servo.get("PIXEL_HOLD1");
+        };
+        frontSensor =hardwareMap.get(DistanceSensor.class,"FRONT_SENSOR");
+        rearSensor = hardwareMap.get(DistanceSensor.class,"REAR_SENSOR");
 
+        pixelHold0 = hardwareMap.servo.get("PIXEL_HOLD0");
+        pixelHold1 = hardwareMap.servo.get("PIXEL_HOLD1");
+        droneRelease = hardwareMap.servo.get("DRONE_RELEASE");
 
             /*
     ** Arm consists of several parts

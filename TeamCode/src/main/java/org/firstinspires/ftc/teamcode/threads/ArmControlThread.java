@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.threads;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -23,8 +24,8 @@ public class ArmControlThread extends RobotThread {
     private Telemetry.Item _T_Intake_Speed;
 
     public ArmControlThread(Gamepad gamepad, Telemetry telemetry,
-                            CRServo[] intake_servos, DcMotor lowerBeltMotor, DcMotor upperBeltMotor, DcMotor[] bendMotors, TouchSensor upperArmLimit, TouchSensor lowerArmLimit) {
-        _armSubSystem = new ArmSubSystem(intake_servos,lowerBeltMotor,upperBeltMotor,bendMotors,upperArmLimit,lowerArmLimit);
+                            CRServo[] intake_servos, DcMotor lowerBeltMotor, DcMotor upperBeltMotor, DcMotor[] bendMotors, TouchSensor upperArmLimit, TouchSensor lowerArmLimit, Servo[] pixelHold) {
+        _armSubSystem = new ArmSubSystem(intake_servos,lowerBeltMotor,upperBeltMotor,bendMotors,upperArmLimit,lowerArmLimit,pixelHold);
 
 
         //TODO set ramp rate in constants
@@ -70,21 +71,34 @@ public class ArmControlThread extends RobotThread {
                 _armSubSystem.moveArm(0);
             }
 
-            // TODO set dead zone
-            // left trigger spit out mouth
-            if (_gamepad.left_trigger>Constants.armControlDeadzone) {
-                _armSubSystem.intakeReverse();
-                _armSubSystem.beltPower(0.5,_armSubSystem.lowerArmLimit());
-                continue;
-            }
-
-            // TODO set dead zone
-            // suck into robot
-            if (_gamepad.right_trigger>Constants.armControlDeadzone) {
+            if (_gamepad.a) {
+                _armSubSystem.raisePixelHold();
                 _armSubSystem.intakeForward();
                 _armSubSystem.beltPower(-1.0,_armSubSystem.lowerArmLimit());
                 continue;
             }
+            else {
+                _armSubSystem.lowerPixelHold();
+                // TODO set dead zone
+                // left trigger spit out mouth
+                if (_gamepad.left_trigger>Constants.armControlDeadzone) {
+                    _armSubSystem.intakeReverse();
+                    _armSubSystem.beltPower(_gamepad.left_trigger/2,_armSubSystem.lowerArmLimit());
+                    continue;
+                }
+
+                // TODO set dead zone
+                // suck into robot
+                if (_gamepad.right_trigger>Constants.armControlDeadzone) {
+                    _armSubSystem.intakeForward();
+                    _armSubSystem.beltPower(-_gamepad.right_trigger/2,_armSubSystem.lowerArmLimit());
+                    continue;
+                }
+            }
+
+
+
+
             _armSubSystem.beltPower(0.0,false);
             _armSubSystem.intakeStop();
 

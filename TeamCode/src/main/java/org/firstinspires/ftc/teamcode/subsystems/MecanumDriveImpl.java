@@ -6,9 +6,12 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.Constants;
+import org.firstinspires.ftc.teamcode.util.IntVector2d;
+import org.firstinspires.ftc.teamcode.util.Pose2D;
 import org.firstinspires.ftc.teamcode.util.WheelPositions;
 
 public class MecanumDriveImpl implements MecanumDrive {
+
 
     protected DcMotor [] _motors;
     protected Telemetry _telemetry;
@@ -16,9 +19,12 @@ public class MecanumDriveImpl implements MecanumDrive {
     protected int [] _ENCODER_WHEELS; // encoder wheels (RIGHT, LEFT)
     protected int [] _REVERSED_WHEELS; // reversed motors list
 
+    protected  int [] _lastWheelPositions;
+    protected Pose2D _position = new Pose2D(0,0,0);
 
     protected Telemetry.Item T_FrontRightSpeed, T_FrontLeftSpeed, T_RearRightSpeed,
-            T_RearLeftSpeed, T_FrontRightPosition, T_FrontLeftPosition, T_RearRightPosition, T_RearLeftPosition;
+            T_RearLeftSpeed, T_FrontRightPosition, T_FrontLeftPosition, T_RearRightPosition, T_RearLeftPosition,
+            T_X,T_Y,T_THETA;
 
 
     public MecanumDriveImpl(MecanumDriveParameters parameters) {
@@ -47,6 +53,9 @@ public class MecanumDriveImpl implements MecanumDrive {
 
 
         // set up telemetry objects:
+        T_X = _telemetry.addData("XPOS",_position.x);
+        T_Y = _telemetry.addData("YPOS", _position.y);
+        T_THETA = _telemetry.addData("THETA", _position.theta);
         T_FrontRightSpeed = _telemetry.addData("FRS","0");
         T_FrontLeftSpeed = _telemetry.addData("FLS","0");
         T_RearRightSpeed = _telemetry.addData("RRS","0");
@@ -82,12 +91,45 @@ public class MecanumDriveImpl implements MecanumDrive {
                 scale * (power * cosine + rotate)  // Front Left
         };
         setMotorSpeeds(wheelSpeeds);
-        outputTelemetry(MecanumDriveTelemetryTypes.WHEEL_SPEEDS);
-        outputTelemetry(MecanumDriveTelemetryTypes.WHEEL_POSITIONS);
+        outputTelemetry(org.firstinspires.ftc.teamcode.subsystems.TelemetryTypes.WHEEL_SPEEDS);
+        outputTelemetry(org.firstinspires.ftc.teamcode.subsystems.TelemetryTypes.WHEEL_POSITIONS);
+    }
+
+
+    public Pose2D get_position() {
+        return _position;
+    }
+
+    public void updateOdometry() {
+
+        if (_lastWheelPositions == null) {
+            _lastWheelPositions = readEncoders();
+            return;
+        }
+        int [] currentWheelPositions = readEncoders();
+        int [] wheelMovements = new int[currentWheelPositions.length];
+
+        for (int i=0; i< currentWheelPositions.length; i++) {
+            wheelMovements[i] = currentWheelPositions[i] - _lastWheelPositions[i];
+        }
+
+        IntVector2d FR,FL,RL,RR;
+
+        FR = new IntVector2d(-wheelMovements[WheelPositions.FrontRight.position], wheelMovements[WheelPositions.FrontRight.position]);
+        FL = new IntVector2d(wheelMovements[WheelPositions.FrontLeft.position], wheelMovements[WheelPositions.FrontLeft.position]);
+        RR = new IntVector2d(wheelMovements[WheelPositions.RearRight.position], wheelMovements[WheelPositions.RearRight.position]);
+        RL = new IntVector2d(-wheelMovements[WheelPositions.RearLeft.position], wheelMovements[WheelPositions.RearLeft.position]);
+
+        IntVector2d result = FR.add(FL,RR,RL);
+        _position.x += Math.cos(result.getLength()) * Constants.COUNTS_PER_INCH_FORWARD;
+        _position.y += Math.sin(result.getLength()) * Constants.COUNTS_PER_INCH_FORWARD;
+        _position.theta += result.getTheta();
+        _lastWheelPositions = currentWheelPositions;
+
     }
 
     @Override
-    public void outputTelemetry(MecanumDriveTelemetryTypes type) {
+    public void outputTelemetry(TelemetryTypes type) {
         switch (type) {
             case WHEEL_SPEEDS:
                 double [] speeds  = readSpeeds();
@@ -103,7 +145,8 @@ public class MecanumDriveImpl implements MecanumDrive {
                 T_FrontLeftPosition.setValue(encoders[WheelPositions.FrontLeft.position]);
                 T_FrontRightPosition.setValue(encoders[WheelPositions.FrontRight.position]);
                 break;
-            case HEADING:
+            case FIELD_POSITION:
+
                 break;
         }
 

@@ -18,6 +18,7 @@ public final class Constants {
     public static final double DRIVE_GEAR_REDUCTION = 0.75; //   3/4
     public static final double WHEEL_DIAMETER_INCHES = 96/25.4;     // For figuring circumference
     public static final double COUNTS_PER_INCH_FORWARD = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
+    public static final double BELT_COUNTS_PER_INCH = COUNTS_PER_MOTOR_REV / (WHEEL_DIAMETER_INCHES * Math.PI);
     public static final double INCH_PER_COUNTS_FORWARD = 1/COUNTS_PER_INCH_FORWARD;
     public static final double ROBOT_DIAMETER_IN = 13;
     public static final double COUNTS_PER_ROTATE = (ROBOT_DIAMETER_IN * Math.PI)*COUNTS_PER_INCH_FORWARD;
@@ -27,7 +28,7 @@ public final class Constants {
     public static final int [] LATERAL_RIGHT_VALUES = new int[]{-1,1,-1,1,1};
     public static final int [] ROTATE_VALUES = new int[]{1,1,-1,-1};
 
-    public static final double SPEED_FACTOR =1.4;
+    public static final double SPEED_FACTOR =3.0;
     public static final double ROTATION_RATE =0.75;
 
     // speed settings

@@ -97,13 +97,16 @@ public class MecanumDriveByGyro extends MecanumDriveImpl implements DriveRobot, 
 
 
     @Override
-    public void outputTelemetry(MecanumDriveTelemetryTypes type) {
-        if (type == MecanumDriveTelemetryTypes.HEADING) {
+    public void outputTelemetry(org.firstinspires.ftc.teamcode.subsystems.TelemetryTypes type) {
+        super.outputTelemetry(type);
+        /*if (type == org.firstinspires.ftc.teamcode.subsystems.TelemetryTypes.HEADING) {
             T_angle.setValue(getAngle());
         }
         else {
             super.outputTelemetry(type);
         }
+
+         */
     }
 
     @Override
@@ -209,9 +212,9 @@ public class MecanumDriveByGyro extends MecanumDriveImpl implements DriveRobot, 
                 direction[3]*power + rotate  // Front Left
         };
         setMotorSpeeds(wheelSpeeds);
-        outputTelemetry(MecanumDriveTelemetryTypes.WHEEL_POSITIONS);
-        outputTelemetry(MecanumDriveTelemetryTypes.WHEEL_SPEEDS);
-        outputTelemetry(MecanumDriveTelemetryTypes.HEADING);
+        outputTelemetry(TelemetryTypes.WHEEL_POSITIONS);
+        outputTelemetry(TelemetryTypes.WHEEL_SPEEDS);
+        outputTelemetry(TelemetryTypes.FIELD_POSITION);
     }
 
     public void resetHeading() {

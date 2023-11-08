@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.threads.TweakableMovementThread;
 import org.firstinspires.ftc.teamcode.util.RobotDevices;
 
 @TeleOp(name = "TeleOp-ArmOnly")
+@Disabled
 public class ThreadedArmOnlyTeleop extends OpMode {
 
     ArmControlThread _arm;
@@ -29,7 +30,8 @@ public class ThreadedArmOnlyTeleop extends OpMode {
                 robotDevices.highBelt,
                 robotDevices.armLift,
                 robotDevices.upperArmLimit,
-                robotDevices.lowerArmLimit
+                robotDevices.lowerArmLimit,
+                robotDevices.pixelFloor
         );
 
         _threadCount = telemetry.addData("Threads", Thread.activeCount());

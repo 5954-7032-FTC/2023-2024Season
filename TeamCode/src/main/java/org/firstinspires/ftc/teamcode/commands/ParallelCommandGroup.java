@@ -21,13 +21,9 @@ public class ParallelCommandGroup implements CommandGroup {
     }
 
     @Override
-    public void addCommands(Command... commandlist) throws HardwareUsageException {
+    public void addCommands(Command... commandlist) {
         ArrayList<SubSystem> hardware = new ArrayList<>();
         for (Command command:commandlist) {
-            SubSystem device = command.getHardwareDevice();
-            if (hardware.indexOf(device) ==0) {
-                throw new HardwareUsageException("Hardware Object used more than once:" + device.toString());
-            }
             hardware.add(command.getHardwareDevice());
             commands.add(new CommandThread(command));
         }
