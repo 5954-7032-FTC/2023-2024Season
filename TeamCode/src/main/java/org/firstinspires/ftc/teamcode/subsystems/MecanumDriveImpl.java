@@ -24,18 +24,12 @@ public class MecanumDriveImpl implements MecanumDrive {
 
     protected Telemetry.Item T_FrontRightSpeed, T_FrontLeftSpeed, T_RearRightSpeed,
             T_RearLeftSpeed, T_FrontRightPosition, T_FrontLeftPosition, T_RearRightPosition, T_RearLeftPosition,
-            T_X,T_Y,T_THETA;
+            T_POS;
 
 
     public MecanumDriveImpl(MecanumDriveParameters parameters) {
         init(parameters.motors,parameters.telemetry,parameters.FREE_WHEELS,parameters.ENCODER_WHEELS,parameters.REVERSED_WHEELS);
     }
-
-    public MecanumDriveImpl(DcMotor[] motors, Telemetry telemetry,
-                int[] FREE_WHEELS, int[] ENCODER_WHEELS, int[] REVERSED_WHEELS) {
-        init(motors,telemetry,FREE_WHEELS,ENCODER_WHEELS,REVERSED_WHEELS);
-    }
-
 
 
     protected void init(DcMotor[] _motors, Telemetry _telemetry,
@@ -53,9 +47,7 @@ public class MecanumDriveImpl implements MecanumDrive {
 
 
         // set up telemetry objects:
-        T_X = _telemetry.addData("XPOS",_position.x);
-        T_Y = _telemetry.addData("YPOS", _position.y);
-        T_THETA = _telemetry.addData("THETA", _position.theta);
+        T_POS = _telemetry.addData("Field(x,y,theta):","(0,0,0)");
         T_FrontRightSpeed = _telemetry.addData("FRS","0");
         T_FrontLeftSpeed = _telemetry.addData("FLS","0");
         T_RearRightSpeed = _telemetry.addData("RRS","0");
@@ -82,7 +74,11 @@ public class MecanumDriveImpl implements MecanumDrive {
         rotate *= Constants.ROTATION_RATE;
         double sine  = Math.sin(angle);
         double cosine = Math.cos(angle);
-        double scale = ( (power + Math.abs(rotate)) > 1 ) ? Constants.SPEED_FACTOR /(power + rotate) : Constants.SPEED_FACTOR /Math.sqrt(2) ;
+
+        //cosine = Math.sqrt(1-sine*sine);
+        double scale = ( (power + Math.abs(rotate)) > 1 ) ?
+                Constants.SPEED_FACTOR /(power + rotate) :
+                Constants.SPEED_FACTOR /Math.sqrt(2) ;
 
         double [] wheelSpeeds = {
                 scale * (power * sine - rotate),   // Front Right
@@ -91,8 +87,10 @@ public class MecanumDriveImpl implements MecanumDrive {
                 scale * (power * cosine + rotate)  // Front Left
         };
         setMotorSpeeds(wheelSpeeds);
-        outputTelemetry(org.firstinspires.ftc.teamcode.subsystems.TelemetryTypes.WHEEL_SPEEDS);
-        outputTelemetry(org.firstinspires.ftc.teamcode.subsystems.TelemetryTypes.WHEEL_POSITIONS);
+        updateOdometry();
+        outputTelemetry(TelemetryTypes.WHEEL_SPEEDS);
+        outputTelemetry(TelemetryTypes.WHEEL_POSITIONS);
+        outputTelemetry(TelemetryTypes.FIELD_POSITION);
     }
 
 
@@ -146,7 +144,8 @@ public class MecanumDriveImpl implements MecanumDrive {
                 T_FrontRightPosition.setValue(encoders[WheelPositions.FrontRight.position]);
                 break;
             case FIELD_POSITION:
-
+                Pose2D pose = get_position();
+                T_POS.setValue("(%f,%f,%f)",pose.x,pose.y,pose.theta);
                 break;
         }
 
@@ -198,5 +197,14 @@ public class MecanumDriveImpl implements MecanumDrive {
                 _motors[wheel].setZeroPowerBehavior(behavior);
     }
 
+    @Override
+    public double getSpeedForward() {
 
+        double value=0.0;
+        double [] speeds = readSpeeds();
+        for (double wheelSpeed: speeds) {
+            value +=wheelSpeed;
+        }
+        return value/4;
+    }
 }

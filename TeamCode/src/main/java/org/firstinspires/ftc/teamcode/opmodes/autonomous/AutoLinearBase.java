@@ -1,14 +1,15 @@
 package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubSystem;
 import org.firstinspires.ftc.teamcode.subsystems.ImuDevice;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveByGyro;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveParameters;
+import org.firstinspires.ftc.teamcode.subsystems.PixelDelivery;
+import org.firstinspires.ftc.teamcode.threads.PixelDeliveryThread;
+import org.firstinspires.ftc.teamcode.util.Constants;
 import org.firstinspires.ftc.teamcode.util.RobotDevices;
 
 public class AutoLinearBase extends LinearOpMode {
@@ -17,12 +18,14 @@ public class AutoLinearBase extends LinearOpMode {
 
     protected MecanumDriveByGyro _move;
     protected ArmSubSystem _armSubSystem;
+    protected PixelDeliveryThread _pixelDeliveryThread;
+    protected PixelDelivery _pixelDelivery;
 
-    protected DistanceSensor frontSensor, rearSensor;
+    protected Telemetry.Item T_pixelHold;
+    protected Telemetry.Item T_sensorServos;
 
-    protected Servo pixelHold0,pixelHold1;
 
-    protected Servo [] sensorServos;
+
 
 
     public void initRobot() {
@@ -35,7 +38,7 @@ public class AutoLinearBase extends LinearOpMode {
         driveParameters.ENCODER_WHEELS = new int[]{0, 1, 2, 3};
         driveParameters.REVERSED_WHEELS = new int[]{2, 3};
         driveParameters.telemetry = telemetry;
-        _move = new MecanumDriveByGyro(driveParameters, new ImuDevice(robotDevices.imu));
+        _move = new MecanumDriveByGyro(driveParameters, new ImuDevice(robotDevices.imunew));
 
         _armSubSystem = new ArmSubSystem(
                 robotDevices.intakeServos,
@@ -44,19 +47,25 @@ public class AutoLinearBase extends LinearOpMode {
                 robotDevices.armLift,
                 robotDevices.upperArmLimit,
                 robotDevices.lowerArmLimit,
-                robotDevices.pixelFloor);
+                robotDevices.pixelHold);
 
 
-
-        frontSensor = robotDevices.frontSensor;
-        rearSensor = robotDevices.rearSensor;
-
-        pixelHold0 = robotDevices.pixelHold0;
-        pixelHold1 = robotDevices.pixelHold1;
-
-        sensorServos = robotDevices.sensorServos;
+        _pixelDelivery = new PixelDelivery(
+                telemetry,
+                robotDevices.leftPixelArm,
+                robotDevices.leftPixelFlip,
+                robotDevices.rightPixelArm,
+                robotDevices.rightPixelFlip,
+                robotDevices.sensorServos,
+                robotDevices.frontSensor,
+                robotDevices.rearSensor
+                );
+        _pixelDeliveryThread = new PixelDeliveryThread(_pixelDelivery);
 
         _move.resetHeading();
+
+        T_pixelHold = telemetry.addData("PixelHold","0=(%f),1=(%f)",0.0,0.0);
+        T_sensorServos = telemetry.addData("SensorServos", "0=(%f),1=(%f)",0.0,0.0);
     }
 
 
@@ -65,57 +74,26 @@ public class AutoLinearBase extends LinearOpMode {
     //do nothing here
     }
 
-
-    public  void dropPixel()  throws InterruptedException {
-        // TODO: fix directions?
-        pixelHold0.setPosition(0);
-        pixelHold1.setPosition(1);
-        Thread.sleep(150);
-        pixelHold0.setPosition(1);
-        pixelHold1.setPosition(0);
-
-    }
-
     public void driveForward(double distanceInches) {
-        _move.driveForward(distanceInches);
+        _move.driveForward(distanceInches*Constants.Y_DISTANCE_RATIO);
     }
 
     public void driveLeft(double distanceInches) {
-        _move.driveLeft(distanceInches);
+        _move.driveLeft(distanceInches*Constants.X_DISTANCE_RATIO);
     }
 
     public void driveReverse(double distanceInches) {
-        _move.driveReverse(distanceInches);
+        _move.driveReverse(distanceInches*Constants.Y_DISTANCE_RATIO);
     }
 
     public void driveRight(double distanceInches) {
-        _move.driveRight(distanceInches);
-    }
-
-    public void extendSensors() {
-        for (Servo sensorServo: sensorServos) {
-            sensorServo.setPosition(1.0);
-        }
-    }
-
-    public void retractSensors() {
-        for (Servo sensorServo: sensorServos) {
-            sensorServo.setPosition(0.0);
-        }
-    }
-
-    public boolean testFrontSensor(int mm) {
-        return frontSensor.getDistance(DistanceUnit.MM) <=mm;
-    }
-
-    public boolean testRearSensor(int mm) {
-        return frontSensor.getDistance(DistanceUnit.MM) <=mm;
+        _move.driveRight(distanceInches*Constants.X_DISTANCE_RATIO);
     }
 
     public void placePixel() {
         _armSubSystem.raisePixelHold();
-        _armSubSystem.runBeltInches(-1);
-        _armSubSystem.runBeltInches(20);
+        _armSubSystem.runBeltMillis(false, 1200);
         _armSubSystem.lowerPixelHold();
     }
+
 }

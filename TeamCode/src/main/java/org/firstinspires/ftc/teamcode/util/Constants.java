@@ -13,6 +13,9 @@ public final class Constants {
     public static final double ARM_RELEASE_POS = 0.85;
     public static final double ARM_SET_POS = 0.2;
 
+    public static final double Y_DISTANCE_RATIO = 6/7.0;
+    public static final double X_DISTANCE_RATIO = 6/4.75;
+
     // motor constants based on physical properties of the robot
     public static final double COUNTS_PER_MOTOR_REV = 1120;   // 1120 per revolution
     public static final double DRIVE_GEAR_REDUCTION = 0.75; //   3/4
@@ -28,8 +31,8 @@ public final class Constants {
     public static final int [] LATERAL_RIGHT_VALUES = new int[]{-1,1,-1,1,1};
     public static final int [] ROTATE_VALUES = new int[]{1,1,-1,-1};
 
-    public static final double SPEED_FACTOR =3.0;
-    public static final double ROTATION_RATE =0.75;
+    public static final double SPEED_FACTOR =2.0;
+    public static final double ROTATION_RATE =1.0;
 
     // speed settings
     public static final double     DRIVE_SPEED             = 0.4;     // Max driving speed for better distance accuracy.
@@ -50,6 +53,54 @@ public final class Constants {
     // Arm control dead zone section
     public static final double armControlDeadzone = 0.2;
 
+    public enum piecePositions {
+        FRONT,
+        REAR,
+        CENTER;
+    }
+
+    public enum pixelDropPositions {
+        // center == 0.5 250ms
+        // front == 0.85 250ms
+        // back == 0.10 500ms
+        RIGHT_CENTER(0.5,250, 0.0),
+        RIGHT_FRONT(0.85,250, 0.0),
+        RIGHT_REAR(0.10,500, 0.0),
+        RIGHT_RESET(1.0,250, 1.0),
+        LEFT_RESET(0.0,250,0.0),
+        LEFT_CENTER(0.5,250, 1.0),
+        LEFT_FRONT(0.10,500, 1.0),
+        LEFT_REAR(0.85,250, 1.0);
+
+        public double pos;
+        public long ms;
+        public double flipPos;
+
+        pixelDropPositions(double pos, long ms, double flipPos) {
+            this.pos = pos;
+            this.ms = ms;
+            this.flipPos = flipPos;
+        }
+    }
+
+    public enum autoSensorPositions {
+
+        EXTENDED_POS(0.65,0.40),
+        RETRACTED_POS(0.0,1.0);
+
+        public double frontPos,rearPos;
+
+        autoSensorPositions(double frontPos, double rearPos) {
+            this.frontPos = frontPos;
+            this.rearPos = rearPos;
+        }
+    }
+    public static final int FRONT_SENSOR_SERVO=0, REAR_SENSOR_SERVO=1;
+
+    public static final int FRONT_SENSOR_DISTANCE_THRESHOLD=30, REAR_SENSOR_DISTANCE_THRESHOLD=20;
+
+
+
     public static final class MecanumDrive {
         public static final double ZONE_LATERAL   = 0.2;
         public static final double ZONE_FORWARD   = 0.2;
@@ -57,6 +108,6 @@ public final class Constants {
         public static final double RAMP_RATE_J1X  = 1.5;
         public static final double RAMP_RATE_J1Y  = 1.5;
         public static final double RAMP_RATE_J2X  =  1.5;
-        public static final double FINE_CONTROL   = 0.55;
+        public static final double FINE_CONTROL   = 0.35;
     }
 }

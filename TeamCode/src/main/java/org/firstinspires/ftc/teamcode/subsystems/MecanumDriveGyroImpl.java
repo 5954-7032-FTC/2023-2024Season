@@ -3,12 +3,16 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import android.graphics.drawable.GradientDrawable;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class MecanumDriveGyroImpl extends MecanumDriveImpl {
-    protected BNO055IMU _imu;
+    protected IMU _imu;
 
     protected Telemetry.Item T_IMU;
     public MecanumDriveGyroImpl(MecanumDriveParameters params) {
@@ -21,7 +25,7 @@ public class MecanumDriveGyroImpl extends MecanumDriveImpl {
     public void outputTelemetry(TelemetryTypes type) {
         switch (type) {
             case IMU:
-                Orientation orientation = _imu.getAngularOrientation();
+                Orientation orientation = _imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                 T_IMU.setValue("("+orientation.firstAngle+","+orientation.secondAngle+","+orientation.thirdAngle+")");
                 break;
             default:

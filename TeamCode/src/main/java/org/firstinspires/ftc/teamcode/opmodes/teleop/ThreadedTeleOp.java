@@ -1,15 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.threads.ArmControlThread;
-import org.firstinspires.ftc.teamcode.threads.LauncherThread;
 import org.firstinspires.ftc.teamcode.threads.MovementThread;
-import org.firstinspires.ftc.teamcode.threads.TweakableMovementThread;
+import org.firstinspires.ftc.teamcode.util.Constants;
 import org.firstinspires.ftc.teamcode.util.RobotDevices;
 
 @TeleOp(name = "TeleOp")
@@ -33,13 +30,14 @@ public class ThreadedTeleOp extends OpMode {
                 robotDevices.armLift,
                 robotDevices.upperArmLimit,
                 robotDevices.lowerArmLimit,
-                robotDevices.pixelFloor
+                robotDevices.pixelHold
         );
 
 
-        _move = new MovementThread(gamepad1,robotDevices.wheels,telemetry,robotDevices.imu,robotDevices.droneRelease,robotDevices.sensorServos);
+        _move = new MovementThread(gamepad1,robotDevices.wheels,telemetry,robotDevices.imunew,robotDevices.droneRelease,robotDevices.sensorServos,robotDevices.wallSensor);
 
         _threadCount = telemetry.addData("Threads", Thread.activeCount());
+
 
     }
 
@@ -48,7 +46,15 @@ public class ThreadedTeleOp extends OpMode {
         super.start();
         _arm.start();
         _move.start();
-
+        robotDevices.leftPixelFlip.setPosition(0.0);
+        robotDevices.rightPixelFlip.setPosition(1.0);
+        try {
+            Thread.sleep(Constants.pixelDropPositions.LEFT_RESET.ms>Constants.pixelDropPositions.RIGHT_RESET.ms?Constants.pixelDropPositions.LEFT_RESET.ms:Constants.pixelDropPositions.RIGHT_RESET.ms );
+            }
+            catch (Exception nope) {
+            }
+        robotDevices.leftPixelArm.setPosition(Constants.pixelDropPositions.LEFT_RESET.pos);
+        robotDevices.rightPixelArm.setPosition(Constants.pixelDropPositions.RIGHT_RESET.pos);
     }
 
     @Override

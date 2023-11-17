@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.threads.MovementThread;
@@ -16,15 +16,14 @@ public class ThreadedDriveOnlyTeleop extends OpMode {
     MovementThread _move;
 
     Telemetry.Item _threadCount;//,_bot_cone;
-    private BNO055IMU imu         = null;
     RobotDevices robotDevices;
 
 
     @Override
     public void init() {
         robotDevices = RobotDevices.getDevices(hardwareMap);
-        imu = robotDevices.imu;
-        _move = new MovementThread(gamepad1,robotDevices.wheels,telemetry,imu,robotDevices.droneRelease, robotDevices.sensorServos);
+        IMU imu = robotDevices.imunew;
+        _move = new MovementThread(gamepad1,robotDevices.wheels,telemetry, imu,robotDevices.droneRelease, robotDevices.sensorServos,robotDevices.wallSensor);
 
         _threadCount = telemetry.addData("Threads", Thread.activeCount());
 
