@@ -76,6 +76,7 @@ public class MovementThread extends RobotThread {
         _sensorServos[0].setPosition(Servo.MIN_POSITION);
         _sensorServos[1].setPosition(Servo.MAX_POSITION);
         double forward;
+        _launch.reset();
         while (!isCancelled()) {
 
             if (_gamepad.x && _gamepad.left_bumper) {

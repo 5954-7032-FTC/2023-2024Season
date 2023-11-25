@@ -8,6 +8,9 @@ import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.subsystems.ArmSubSystem;
+import org.firstinspires.ftc.teamcode.subsystems.ImuDevice;
+import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveByGyro;
 import org.firstinspires.ftc.teamcode.subsystems.PixelDelivery;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveImpl;
@@ -18,7 +21,6 @@ import org.firstinspires.ftc.teamcode.util.TweakableDouble;
 import org.firstinspires.ftc.teamcode.util.motorRampProfile;
 
 @TeleOp(name = "MoveTest")
-@Disabled
 public class MoveTest extends LinearOpMode {
 
     protected Telemetry.Item T_sensorServos;
@@ -36,10 +38,18 @@ public class MoveTest extends LinearOpMode {
         driveParameters.ENCODER_WHEELS = new int[]{0,1,2,3};
         driveParameters.FREE_WHEELS = new int[]{0, 1, 2, 3};
         driveParameters.REVERSED_WHEELS = new int[]{2, 3};
-        MecanumDrive drive = new MecanumDriveImpl(driveParameters);
+        MecanumDriveByGyro drive = new MecanumDriveByGyro(driveParameters, new ImuDevice(robotDevices.imunew));
 
         IMU imu  = robotDevices.imunew;
 
+        ArmSubSystem _armSubSystem = new ArmSubSystem(
+                robotDevices.intakeServos,
+                robotDevices.lowBelt,
+                robotDevices.highBelt,
+                robotDevices.armLift,
+                robotDevices.upperArmLimit,
+                robotDevices.lowerArmLimit,
+                robotDevices.pixelHold);
         //sensorServos = robotDevices.sensorServos;
 
         T_sensorServos = telemetry.addData("SensorServos", "0=(%f),1=(%f)",0.0,0.0);
@@ -109,6 +119,20 @@ public class MoveTest extends LinearOpMode {
                     robotOrientation.getPitch(AngleUnit.DEGREES),
                     robotOrientation.getRoll(AngleUnit.DEGREES)
             );
+            telemetry.update();
+
+            if (gamepad1.dpad_left) {
+                drive.driveLeft(30*Constants.X_DISTANCE_RATIO);
+            }
+            else if (gamepad1.dpad_right) {
+                drive.driveRight(30*Constants.X_DISTANCE_RATIO);
+            }
+            else if (gamepad1.dpad_down) {
+                drive.driveForward(-12*Constants.Y_DISTANCE_RATIO);
+            }
+            else if (gamepad1.dpad_up) {
+                drive.driveForward(12*Constants.Y_DISTANCE_RATIO);
+            }
 
             if (gamepad1.a) {
                 autoPixelDelivery.extendSensors();
@@ -117,6 +141,10 @@ public class MoveTest extends LinearOpMode {
                 autoPixelDelivery.retractSensors();
             }
 
+            if (gamepad1.b) {
+                _armSubSystem.moveArmMillis(true,250);
+                _armSubSystem.moveArmMillis(false, 250);
+            }
 
 
             T_sensors.setValue("Front:(%f) Rear(%f)",autoPixelDelivery.readFrontSensor(),autoPixelDelivery.readRearSensor());

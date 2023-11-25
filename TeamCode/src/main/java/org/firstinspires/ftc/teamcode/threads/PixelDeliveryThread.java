@@ -39,10 +39,17 @@ public class PixelDeliveryThread extends RobotThread {
         return position;
     }
 
+    private boolean looking=false;
+
+    public void setLooking(boolean looking) {
+        this.looking = looking;
+    }
+
     @Override
     public void run() {
         super.run();
         while (!isCancelled()) {
+            if (!looking) continue;
             boolean front = _pixelDelivery.testFrontSensor(Constants.FRONT_SENSOR_DISTANCE_THRESHOLD);
             boolean rear = _pixelDelivery.testRearSensor(Constants.REAR_SENSOR_DISTANCE_THRESHOLD);
             if (front && !rear) {

@@ -111,6 +111,8 @@ public class MecanumDriveImpl implements MecanumDrive {
             wheelMovements[i] = currentWheelPositions[i] - _lastWheelPositions[i];
         }
 
+
+
         IntVector2d FR,FL,RL,RR;
 
         FR = new IntVector2d(-wheelMovements[WheelPositions.FrontRight.position], wheelMovements[WheelPositions.FrontRight.position]);

@@ -9,12 +9,17 @@ import org.firstinspires.ftc.teamcode.util.Constants;
 @Autonomous(
         name = "Auto - Blue Front"
 )
-public class AutoLinearBlueFront extends AutoLinearBase {
+public class AutoLinearBlueFront extends AutoLinearFrontBase {
 
 
 
     @Override
     public void runOpMode() throws InterruptedException {
+
+        direction=Direction.LEFT;
+        doAuto();
+
+        /*
         initRobot();
 
         telemetry.update();
@@ -78,6 +83,7 @@ public class AutoLinearBlueFront extends AutoLinearBase {
         }
         driveRight(24);
         driveReverse(16);
+         */
     }
 
 }

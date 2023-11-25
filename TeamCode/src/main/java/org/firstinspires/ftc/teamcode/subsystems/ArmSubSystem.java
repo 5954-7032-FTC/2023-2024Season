@@ -89,6 +89,16 @@ public class ArmSubSystem implements SubSystem {
         _lowerBeltMotor.setPower(0);
     }
 
+    public void moveArmMillis(boolean up,long millis) {
+        moveArm(up?-1:1);
+        try {
+            Thread.sleep(millis);
+        }
+        catch (InterruptedException ignored) {
+        }
+        moveArm(0);
+    }
+
     public void moveArm(double power) {
         for (DcMotor motor : _bendMotors) {
             motor.setPower(power);

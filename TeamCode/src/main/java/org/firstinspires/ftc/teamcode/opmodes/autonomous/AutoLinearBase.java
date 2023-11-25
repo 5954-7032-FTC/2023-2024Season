@@ -23,7 +23,9 @@ public class AutoLinearBase extends LinearOpMode {
 
     protected Telemetry.Item T_pixelHold;
     protected Telemetry.Item T_sensorServos;
+    protected Telemetry.Item T_IMU;
 
+    protected ImuDevice _imu;
 
 
 
@@ -33,12 +35,19 @@ public class AutoLinearBase extends LinearOpMode {
 
         robotDevices = RobotDevices.getDevices(hardwareMap);
 
+
+        _imu =  new ImuDevice(robotDevices.imunew);
+        T_IMU = telemetry.addData("IMU", "(Yaw:(%f)",
+                _imu.getHeading()
+        );
+
         MecanumDriveParameters driveParameters = new MecanumDriveParameters();
         driveParameters.motors = robotDevices.wheels;
         driveParameters.ENCODER_WHEELS = new int[]{0, 1, 2, 3};
         driveParameters.REVERSED_WHEELS = new int[]{2, 3};
         driveParameters.telemetry = telemetry;
         _move = new MecanumDriveByGyro(driveParameters, new ImuDevice(robotDevices.imunew));
+        _move.setFixHeadingToZero();
 
         _armSubSystem = new ArmSubSystem(
                 robotDevices.intakeServos,
@@ -68,6 +77,31 @@ public class AutoLinearBase extends LinearOpMode {
         T_sensorServos = telemetry.addData("SensorServos", "0=(%f),1=(%f)",0.0,0.0);
     }
 
+    protected enum Direction {
+        RIGHT,LEFT
+    }
+
+    protected Direction direction;
+    public void moveDirection(double distanceInches) {
+        switch (direction) {
+            case RIGHT:
+                driveRight(distanceInches);
+                break;
+            case LEFT:
+                driveLeft(distanceInches);
+                break;
+        }
+    }
+    public void moveAntiDirection(double distanceInches) {
+        switch (direction) {
+            case LEFT:
+                driveRight(distanceInches);
+                break;
+            case RIGHT:
+                driveLeft(distanceInches);
+                break;
+        }
+    }
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -76,18 +110,30 @@ public class AutoLinearBase extends LinearOpMode {
 
     public void driveForward(double distanceInches) {
         _move.driveForward(distanceInches*Constants.Y_DISTANCE_RATIO);
+
+        T_IMU.setValue(_imu.getHeading());
+        telemetry.update();
     }
 
     public void driveLeft(double distanceInches) {
         _move.driveLeft(distanceInches*Constants.X_DISTANCE_RATIO);
+
+        T_IMU.setValue(_imu.getHeading());
+        telemetry.update();
     }
 
     public void driveReverse(double distanceInches) {
         _move.driveReverse(distanceInches*Constants.Y_DISTANCE_RATIO);
+
+        T_IMU.setValue(_imu.getHeading());
+        telemetry.update();
     }
 
     public void driveRight(double distanceInches) {
         _move.driveRight(distanceInches*Constants.X_DISTANCE_RATIO);
+
+        T_IMU.setValue(_imu.getHeading());
+        telemetry.update();
     }
 
     public void placePixel() {

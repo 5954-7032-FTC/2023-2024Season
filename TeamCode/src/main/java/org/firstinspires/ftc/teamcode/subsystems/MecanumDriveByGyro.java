@@ -22,6 +22,7 @@ public class MecanumDriveByGyro extends MecanumDriveImpl implements DriveRobot, 
     private Orientation _lastAngles = new Orientation();
     private double _currentAngle = 0.0;
     protected ImuDevice imu;
+    protected boolean fixHeadingToZero = false;
 
     @Override
     public void resetAngle() {
@@ -138,6 +139,8 @@ public class MecanumDriveByGyro extends MecanumDriveImpl implements DriveRobot, 
 
         moveRobotDirection(Constants.DRIVE_SPEED, 0,direction);
 
+        targetHeading = fixHeadingToZero?0.0:imu.getHeading();
+
         // keep looping while we are still active, and BOTH motors are running.
         while (leftIsBusy() && rightIsBusy()) {
 
@@ -154,12 +157,13 @@ public class MecanumDriveByGyro extends MecanumDriveImpl implements DriveRobot, 
         setRunMode(_ENCODER_WHEELS, DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
+    double targetHeading;
     @Override
     public double getSteeringCorrection(double desiredHeading, double proportionalGain) {
         imu.getHeading();
 
-        /*
-        targetHeading = desiredHeading;  // Save for telemetry
+
+        //targetHeading = desiredHeading;  // Save for telemetry
 
         // Get the robot heading by applying an offset to the IMU heading
         //robotHeading = getRawHeading() - headingOffset;
@@ -167,13 +171,15 @@ public class MecanumDriveByGyro extends MecanumDriveImpl implements DriveRobot, 
         // Determine the heading current error
         headingError = targetHeading - imu.getHeading();
 
+        //headingError %= 360;
+
         // Normalize the error to be within +/- 180 degrees
         while (headingError > 180)  headingError -= 360;
         while (headingError <= -180) headingError += 360;
-        */
+
 
         // Multiply the error by the gain to determine the required steering correction/  Limit the result to +/- 1.0
-        return 0;//Range.clip(headingError * proportionalGain, -1, 1);
+        return -Range.clip(headingError * proportionalGain, -1, 1);
     }
 
     @Override
@@ -276,6 +282,11 @@ public class MecanumDriveByGyro extends MecanumDriveImpl implements DriveRobot, 
         do {} while (leftIsBusy() && rightIsBusy());
         moveRobotDirection(0, 0, Constants.FORWARD_VALUES);
         setRunMode(_ENCODER_WHEELS, DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+
+    public void setFixHeadingToZero() {
+        fixHeadingToZero =  true;
     }
 
 }

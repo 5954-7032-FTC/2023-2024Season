@@ -13,8 +13,8 @@ public final class Constants {
     public static final double ARM_RELEASE_POS = 0.85;
     public static final double ARM_SET_POS = 0.2;
 
-    public static final double Y_DISTANCE_RATIO = 6/7.0;
-    public static final double X_DISTANCE_RATIO = 6/4.75;
+    public static final double Y_DISTANCE_RATIO = 12.0/13.0;
+    public static final double X_DISTANCE_RATIO = 30.0/26.0;
 
     // motor constants based on physical properties of the robot
     public static final double COUNTS_PER_MOTOR_REV = 1120;   // 1120 per revolution
@@ -23,6 +23,7 @@ public final class Constants {
     public static final double COUNTS_PER_INCH_FORWARD = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
     public static final double BELT_COUNTS_PER_INCH = COUNTS_PER_MOTOR_REV / (WHEEL_DIAMETER_INCHES * Math.PI);
     public static final double INCH_PER_COUNTS_FORWARD = 1/COUNTS_PER_INCH_FORWARD;
+    public static final double INCH_PER_COUNT_TIMES_1_OVER_ROOT_2 = INCH_PER_COUNTS_FORWARD * 1/SQRT2;
     public static final double ROBOT_DIAMETER_IN = 13;
     public static final double COUNTS_PER_ROTATE = (ROBOT_DIAMETER_IN * Math.PI)*COUNTS_PER_INCH_FORWARD;
     public static final int [] FORWARD_VALUES  = new int[]{ 1, 1, 1, 1,1};
@@ -45,7 +46,7 @@ public final class Constants {
     // Decrease these numbers if the heading does not settle on the correct value
     public static final double     P_TURN_GAIN            = 0.02;     // Larger is more responsive, but also less stable
     //maybe only use one of these.
-    public static final double     P_DRIVE_GAIN           = 0.03;     // Larger is more responsive, but also less stable
+    public static final double     P_DRIVE_GAIN           = 0.025;     // Larger is more responsive, but also less stable
 
 
     public final static String VuforiaKey = "Ac6tBZr/////AAABmd2+0ZS1DUaxvjeLOQXt6BocTj8MS8ZdGc3iaWgJcb4x+GTRiMydjRed7kvoAvq0x21glktV2ekv6Nq8WLNelf5Chl5vN4X9QjUKYvH1fgh72q2cY2w5lMO5tmoOAbyNlN4hSM+RdaWXC7MpY95EVbwz584eP2KUQ97DMCFYqGj6zaVTap2FQ/U2rK7XDNp+s0mdm1+2dvJh6bw0Xpp/DjkUG7RB3uLZe0niObsnONPJg29RCf2eOVY/NP7qjXZamhGLjR1Cpj+U2HGh5DIqCauT/lvn/PDfa+H8ErXG0grgeSqQUHGYlsnYiYrp7Q70RKeebAeOsMVVj6zNhjI6dGE06u3JZgT6aF5EMxnJyc2X";
@@ -63,14 +64,14 @@ public final class Constants {
         // center == 0.5 250ms
         // front == 0.85 250ms
         // back == 0.10 500ms
-        RIGHT_CENTER(0.5,250, 0.0),
-        RIGHT_FRONT(0.85,250, 0.0),
+        RIGHT_CENTER(0.5,500, 0.0),
+        RIGHT_FRONT(0.85,500, 0.0),
         RIGHT_REAR(0.10,500, 0.0),
-        RIGHT_RESET(1.0,250, 1.0),
-        LEFT_RESET(0.0,250,0.0),
-        LEFT_CENTER(0.5,250, 1.0),
+        RIGHT_RESET(1.0,500, 1.0),
+        LEFT_RESET(0.0,500,0.0),
+        LEFT_CENTER(0.5,500, 1.0),
         LEFT_FRONT(0.10,500, 1.0),
-        LEFT_REAR(0.85,250, 1.0);
+        LEFT_REAR(0.85,500, 1.0);
 
         public double pos;
         public long ms;
@@ -85,7 +86,7 @@ public final class Constants {
 
     public enum autoSensorPositions {
 
-        EXTENDED_POS(0.65,0.40),
+        EXTENDED_POS(0.65,0.60),
         RETRACTED_POS(0.0,1.0);
 
         public double frontPos,rearPos;
