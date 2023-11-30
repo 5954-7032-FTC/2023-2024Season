@@ -142,4 +142,9 @@ public class AutoLinearBase extends LinearOpMode {
         _armSubSystem.lowerPixelHold();
     }
 
+    public void unPlacePixel() {
+        _armSubSystem.raisePixelHold();
+        _armSubSystem.runBeltMillis(true, 1200);
+    }
+
 }

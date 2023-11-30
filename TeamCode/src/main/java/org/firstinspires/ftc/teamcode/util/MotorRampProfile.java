@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.util;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class motorRampProfile {
+public class MotorRampProfile {
     ElapsedTime rampTimer = new ElapsedTime();
     double curPoint = 0;
     double prevT = 0;
@@ -10,7 +10,7 @@ public class motorRampProfile {
     double rampRate;
 
     //used for testing
-    public motorRampProfile( double rampRate, ElapsedTime timer) {
+    public MotorRampProfile(double rampRate, ElapsedTime timer) {
         rampTimer = timer;
         this.rampRate = rampRate;
     }
@@ -23,7 +23,7 @@ public class motorRampProfile {
         return rampRate;
     }
 
-    public motorRampProfile(double rampRate){
+    public MotorRampProfile(double rampRate){
         this.rampRate = rampRate;
     }
 

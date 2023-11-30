@@ -3,19 +3,17 @@ package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 
-
-
 @Autonomous(
-        name = "Auto - Blue Rear"
+        name = "Auto - Blue Rear - No Place"
 )
-public class AutoLinearBlueRear extends AutoLineaRearBase {
+public class AutoLinearBlueRearNoPlace extends AutoLineaRearBaseNoPlace {
 
 
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        direction=Direction.RIGHT;
+        direction=Direction.LEFT;
         doAuto();
 
     }

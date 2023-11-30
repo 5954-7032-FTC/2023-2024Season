@@ -95,8 +95,7 @@ public class RobotDevices {
         frontSensor =hardwareMap.get(DistanceSensor.class,"FRONT_SENSOR");
         rearSensor = hardwareMap.get(DistanceSensor.class,"REAR_SENSOR");
 
-        //pixelFloor0 = hardwareMap.servo.get("PIXEL_SERV0");
-        //pixelFloor1 = hardwareMap.servo.get("PIXEL_SERV1");
+
         leftPixelArm = hardwareMap.servo.get("LEFT_PIXEL_ARM");
         rightPixelArm = hardwareMap.servo.get("RIGHT_PIXEL_ARM");
         leftPixelFlip = hardwareMap.servo.get("LEFT_PIXEL_FLIP");

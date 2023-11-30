@@ -9,7 +9,7 @@ import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveImpl;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveParameters;
-import org.firstinspires.ftc.teamcode.util.motorRampProfile;
+import org.firstinspires.ftc.teamcode.util.MotorRampProfile;
 
 import org.firstinspires.ftc.teamcode.util.Debounce;
 import org.firstinspires.ftc.teamcode.util.Tweakable;
@@ -91,7 +91,7 @@ public class TweakableMovementThread extends RobotThread {
     Debounce dpad_up,dpad_down,dpad_left,dpad_right;
 
 
-    motorRampProfile _Joy1X, _Joy1Y, _Joy2X;
+    MotorRampProfile _Joy1X, _Joy1Y, _Joy2X;
     Telemetry.Item T_TWEAK;//,T_RF,T_RR,T_LF,T_LR;
 
 
@@ -124,9 +124,9 @@ public class TweakableMovementThread extends RobotThread {
         driveParameters.REVERSED_WHEELS = new int[]{2, 3};
         drive = new MecanumDriveImpl(driveParameters);
 
-        _Joy1Y = new motorRampProfile(_ramp_rate_J1X.value);
-        _Joy1X = new motorRampProfile(_ramp_rate_J1Y.value);
-        _Joy2X = new motorRampProfile(_ramp_rate_J2X.value);
+        _Joy1Y = new MotorRampProfile(_ramp_rate_J1X.value);
+        _Joy1X = new MotorRampProfile(_ramp_rate_J1Y.value);
+        _Joy2X = new MotorRampProfile(_ramp_rate_J2X.value);
 
 
         if (includeTweaks) init_tweaks(debounceDelayms);

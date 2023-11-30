@@ -3,12 +3,10 @@ package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 
-
-
 @Autonomous(
-        name = "Auto - Blue Rear"
+        name = "Auto - Red Rear - No Place"
 )
-public class AutoLinearBlueRear extends AutoLineaRearBase {
+public class AutoLinearRedRearNoPlace extends AutoLineaRearBaseNoPlace {
 
 
 

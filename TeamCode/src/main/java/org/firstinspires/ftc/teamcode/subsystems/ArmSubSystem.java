@@ -73,7 +73,7 @@ public class ArmSubSystem implements SubSystem {
 
     public void beltPower(double power, boolean reverse) {
         lowerBeltPower(power);
-        upperBeltPower( (reverse?-power:power) *0.8);
+        upperBeltPower( -power*0.8);//(reverse?-power:power) *0.8);
     }
 
     public void runBeltMillis(boolean forward, long millis){

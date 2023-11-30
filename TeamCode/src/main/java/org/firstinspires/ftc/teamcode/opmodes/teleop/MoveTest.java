@@ -12,15 +12,14 @@ import org.firstinspires.ftc.teamcode.subsystems.ArmSubSystem;
 import org.firstinspires.ftc.teamcode.subsystems.ImuDevice;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveByGyro;
 import org.firstinspires.ftc.teamcode.subsystems.PixelDelivery;
-import org.firstinspires.ftc.teamcode.subsystems.MecanumDrive;
-import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveImpl;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveParameters;
 import org.firstinspires.ftc.teamcode.util.Constants;
 import org.firstinspires.ftc.teamcode.util.RobotDevices;
 import org.firstinspires.ftc.teamcode.util.TweakableDouble;
-import org.firstinspires.ftc.teamcode.util.motorRampProfile;
+import org.firstinspires.ftc.teamcode.util.MotorRampProfile;
 
 @TeleOp(name = "MoveTest")
+@Disabled
 public class MoveTest extends LinearOpMode {
 
     protected Telemetry.Item T_sensorServos;
@@ -54,15 +53,15 @@ public class MoveTest extends LinearOpMode {
 
         T_sensorServos = telemetry.addData("SensorServos", "0=(%f),1=(%f)",0.0,0.0);
 
-        motorRampProfile _Joy1X, _Joy1Y, _Joy2X;
+        MotorRampProfile _Joy1X, _Joy1Y, _Joy2X;
         TweakableDouble _ramp_rate_J1X =  new TweakableDouble("RampRateJ1X", 0.02, 1.5);
         TweakableDouble _ramp_rate_J1Y =  new TweakableDouble("RampRateJ1Y", 0.02, 1.5);
         TweakableDouble _ramp_rate_J2X =  new TweakableDouble("RampRateJ2X", 0.02, 1.5);
 
 
-        _Joy1Y = new motorRampProfile(_ramp_rate_J1X.value);
-        _Joy1X = new motorRampProfile(_ramp_rate_J1Y.value);
-        _Joy2X = new motorRampProfile(_ramp_rate_J2X.value);
+        _Joy1Y = new MotorRampProfile(_ramp_rate_J1X.value);
+        _Joy1X = new MotorRampProfile(_ramp_rate_J1Y.value);
+        _Joy2X = new MotorRampProfile(_ramp_rate_J2X.value);
 
         //Servo pixelHold0,pixelHold1;
 
