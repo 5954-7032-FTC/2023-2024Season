@@ -22,7 +22,7 @@ public class AutoLinearFrontBase extends AutoLinearBase {
         // start looking for a piece front or back
 
         _pixelDeliveryThread.setLooking(true);
-        moveDirection(12);
+        moveDirection(8);
         _pixelDeliveryThread.setLooking(false);
         _pixelDeliveryThread.cancel();
         // see if it saw something?
@@ -30,7 +30,7 @@ public class AutoLinearFrontBase extends AutoLinearBase {
         Telemetry.Item T_where = telemetry.addData("Where?", "none");
 
         //now move back to placement location
-        moveAntiDirection(18);
+        moveAntiDirection(14);
         switch (position) {
             case FRONT:
                 T_where.setValue("front(left side)");

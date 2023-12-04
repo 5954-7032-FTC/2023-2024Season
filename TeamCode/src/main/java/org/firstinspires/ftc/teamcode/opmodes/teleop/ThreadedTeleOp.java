@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.subsystems.PixelDelivery;
 import org.firstinspires.ftc.teamcode.threads.ArmControlThread;
 import org.firstinspires.ftc.teamcode.threads.MovementThread;
 import org.firstinspires.ftc.teamcode.util.Constants;
@@ -33,8 +34,18 @@ public class ThreadedTeleOp extends OpMode {
                 robotDevices.pixelHold
         );
 
+        PixelDelivery pixelDelivery = new PixelDelivery(
+                telemetry,
+                robotDevices.leftPixelArm,
+                robotDevices.leftPixelFlip,
+                robotDevices.rightPixelArm,
+                robotDevices.rightPixelFlip,
+                robotDevices.sensorServos,
+                robotDevices.frontSensor,
+                robotDevices.rearSensor
+        );
 
-        _move = new MovementThread(gamepad1,robotDevices.wheels,telemetry,robotDevices.imunew,robotDevices.droneRelease,robotDevices.sensorServos,robotDevices.wallSensor);
+        _move = new MovementThread(gamepad1,robotDevices.wheels,telemetry,robotDevices.imunew,robotDevices.droneRelease,robotDevices.sensorServos,robotDevices.wallSensor, pixelDelivery);
 
         _threadCount = telemetry.addData("Threads", Thread.activeCount());
 

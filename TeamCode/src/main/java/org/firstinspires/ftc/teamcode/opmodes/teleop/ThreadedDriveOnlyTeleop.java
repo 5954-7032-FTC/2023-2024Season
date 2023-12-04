@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.subsystems.PixelDelivery;
 import org.firstinspires.ftc.teamcode.threads.MovementThread;
 import org.firstinspires.ftc.teamcode.util.RobotDevices;
 
@@ -23,7 +24,17 @@ public class ThreadedDriveOnlyTeleop extends OpMode {
     public void init() {
         robotDevices = RobotDevices.getDevices(hardwareMap);
         IMU imu = robotDevices.imunew;
-        _move = new MovementThread(gamepad1,robotDevices.wheels,telemetry, imu,robotDevices.droneRelease, robotDevices.sensorServos,robotDevices.wallSensor);
+        PixelDelivery pixelDelivery = new PixelDelivery(
+                telemetry,
+                robotDevices.leftPixelArm,
+                robotDevices.leftPixelFlip,
+                robotDevices.rightPixelArm,
+                robotDevices.rightPixelFlip,
+                robotDevices.sensorServos,
+                robotDevices.frontSensor,
+                robotDevices.rearSensor
+        );
+        _move = new MovementThread(gamepad1,robotDevices.wheels,telemetry, imu,robotDevices.droneRelease, robotDevices.sensorServos,robotDevices.wallSensor, pixelDelivery);
 
         _threadCount = telemetry.addData("Threads", Thread.activeCount());
 

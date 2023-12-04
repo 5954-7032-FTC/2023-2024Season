@@ -72,6 +72,11 @@ public class ArmControlThread extends RobotThread {
 
             if (_gamepad.a) {
                 _armSubSystem.raisePixelHold();
+                try {
+                    Thread.sleep(350);
+                }
+                catch(InterruptedException ignored) {}
+
                 _armSubSystem.intakeForward();
                 _armSubSystem.beltPower(-1.0,_armSubSystem.lowerArmLimit());
                 continue;

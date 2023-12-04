@@ -11,8 +11,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveImpl;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveParameters;
+import org.firstinspires.ftc.teamcode.subsystems.PixelDelivery;
 import org.firstinspires.ftc.teamcode.subsystems.PlaneLauncher;
 import org.firstinspires.ftc.teamcode.util.Constants;
+import org.firstinspires.ftc.teamcode.util.Debounce;
 import org.firstinspires.ftc.teamcode.util.MotorRampProfile;
 
 
@@ -32,14 +34,17 @@ public class MovementThread extends RobotThread {
     Telemetry.Item T_wall;
 
 
-    public MovementThread(Gamepad gamepad, DcMotor[] motors, Telemetry telemetry, IMU imu, Servo launchServo, Servo[] sensorServos, DistanceSensor wallSesor) {
+    PixelDelivery _pixelDelivery;
 
-        this.init(gamepad, motors, telemetry, imu, launchServo, sensorServos, wallSesor);
+    public MovementThread(Gamepad gamepad, DcMotor[] motors, Telemetry telemetry, IMU imu, Servo launchServo, Servo[] sensorServos, DistanceSensor wallSesor, PixelDelivery pixelDelivery) {
+
+        this.init(gamepad, motors, telemetry, imu, launchServo, sensorServos, wallSesor, pixelDelivery);
     }
 
-    protected void init(Gamepad gamepad, DcMotor[] motors, Telemetry telemetry, IMU imu, Servo launchServo, Servo[] sensorServos, DistanceSensor wallSensor) {
+    protected void init(Gamepad gamepad, DcMotor[] motors, Telemetry telemetry, IMU imu, Servo launchServo, Servo[] sensorServos, DistanceSensor wallSensor, PixelDelivery pixelDelivery) {
         this._gamepad = gamepad;
 
+        this._pixelDelivery = pixelDelivery;
         MecanumDriveParameters driveParameters = new MecanumDriveParameters();
         driveParameters.telemetry = telemetry;
         driveParameters.motors = motors;
@@ -61,6 +66,8 @@ public class MovementThread extends RobotThread {
         _wallSensor = wallSensor;
         _telemetry = telemetry;
         T_wall = _telemetry.addData("Wall sensor", _wallSensor.getDistance(DistanceUnit.MM));
+
+
     }
 
     private double deadzone(double power, double zone) {
@@ -75,11 +82,31 @@ public class MovementThread extends RobotThread {
         _sensorServos[1].setPosition(Servo.MAX_POSITION);
         double forward;
         _launch.reset();
+        boolean drop=true;
+        Debounce buttona = new Debounce(250);
         while (!isCancelled()) {
 
             if (_gamepad.x && _gamepad.left_bumper) {
                 _launch.launch();
             }
+
+            if (buttona.checkPress(_gamepad.a)) {
+
+                if (drop) {
+                    _pixelDelivery.leftPixelDrop();
+                    _pixelDelivery.rightPixelDrop();
+                    drop = false;
+                } else {
+                    drop = true;
+                    try {
+                        _pixelDelivery.rightPixelReset();
+                        _pixelDelivery.leftPixelReset();
+                    } catch (InterruptedException ignored) {
+                    }
+                }
+            }
+
+
 
             if (_gamepad.y) {
                 _launch.reset();

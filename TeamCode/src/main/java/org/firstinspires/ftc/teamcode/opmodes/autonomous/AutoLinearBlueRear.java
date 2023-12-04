@@ -15,7 +15,7 @@ public class AutoLinearBlueRear extends AutoLineaRearBase {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        direction=Direction.RIGHT;
+        direction=Direction.LEFT;
         doAuto();
 
     }

@@ -63,8 +63,6 @@ public class PixelDelivery implements SubSystem{
         _sensorServos[Constants.REAR_SENSOR_SERVO].setPosition(Constants.autoSensorPositions.RETRACTED_POS.rearPos);
     }
 
-
-
     public void leftPixelReset() throws InterruptedException {
         _leftPixelFlip.setPosition(Constants.pixelDropPositions.LEFT_RESET.flipPos);
         Thread.sleep(Constants.pixelDropPositions.LEFT_RESET.ms);
@@ -88,6 +86,16 @@ public class PixelDelivery implements SubSystem{
         Thread.sleep(position.ms);
         _rightPixelFlip.setPosition(position.flipPos);
         Thread.sleep(position.ms);
+    }
+
+    public void rightPixelDrop() {
+        _rightPixelArm.setPosition(Constants.pixelDropPositions.RIGHT_FRONT.pos);
+        _rightPixelFlip.setPosition(Constants.pixelDropPositions.RIGHT_FRONT.flipPos);
+    }
+
+    public void leftPixelDrop() {
+        _leftPixelArm.setPosition(Constants.pixelDropPositions.LEFT_FRONT.pos);
+        _leftPixelFlip.setPosition(Constants.pixelDropPositions.LEFT_FRONT.flipPos);
     }
 
 }
