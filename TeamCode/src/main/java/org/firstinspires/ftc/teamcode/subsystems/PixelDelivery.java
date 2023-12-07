@@ -68,9 +68,19 @@ public class PixelDelivery implements SubSystem{
         Thread.sleep(Constants.pixelDropPositions.LEFT_RESET.ms);
         _leftPixelArm.setPosition(Constants.pixelDropPositions.LEFT_RESET.pos);
     }
+
+    public void leftPixelResetForce() {
+        _leftPixelFlip.setPosition(Constants.pixelDropPositions.LEFT_RESET.flipPos);
+        _leftPixelArm.setPosition(Constants.pixelDropPositions.LEFT_RESET.pos);
+    }
+
     public void rightPixelReset() throws InterruptedException {
         _rightPixelFlip.setPosition(Constants.pixelDropPositions.RIGHT_RESET.flipPos);
         Thread.sleep(Constants.pixelDropPositions.RIGHT_RESET.ms);
+        _rightPixelArm.setPosition(Constants.pixelDropPositions.RIGHT_RESET.pos);
+    }
+    public void rightPixelResetForce() {
+        _rightPixelFlip.setPosition(Constants.pixelDropPositions.RIGHT_RESET.flipPos);
         _rightPixelArm.setPosition(Constants.pixelDropPositions.RIGHT_RESET.pos);
     }
 

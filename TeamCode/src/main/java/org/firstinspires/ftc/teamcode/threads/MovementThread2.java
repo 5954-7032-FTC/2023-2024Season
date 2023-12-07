@@ -1,16 +1,12 @@
 package org.firstinspires.ftc.teamcode.threads;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDrive;
-import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveImpl;
-import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveParameters;
 import org.firstinspires.ftc.teamcode.subsystems.PixelDelivery;
 import org.firstinspires.ftc.teamcode.subsystems.PlaneLauncher;
 import org.firstinspires.ftc.teamcode.util.Constants;
@@ -18,56 +14,39 @@ import org.firstinspires.ftc.teamcode.util.Debounce;
 import org.firstinspires.ftc.teamcode.util.MotorRampProfile;
 
 
-public class MovementThread extends RobotThread {
+public class MovementThread2 extends RobotThread {
 
     private Gamepad _gamepad;
-
     private MecanumDrive _drive;
+    private PlaneLauncher _launch;
+    private Servo[] _sensorServos;
+    private DistanceSensor _wallSensor;
+    private Telemetry _telemetry;
+    private PixelDelivery _pixelDelivery;
 
     MotorRampProfile _Joy1X, _Joy1Y, _Joy2X;
-    PlaneLauncher _launch;
-
-    Servo[] _sensorServos;
-
-    DistanceSensor _wallSensor;
-    Telemetry _telemetry;
     Telemetry.Item T_wall;
 
-
-    PixelDelivery _pixelDelivery;
-
-    public MovementThread(Gamepad gamepad, DcMotor[] motors, Telemetry telemetry, IMU imu, Servo launchServo, Servo[] sensorServos, DistanceSensor wallSesor, PixelDelivery pixelDelivery) {
-
-        this.init(gamepad, motors, telemetry, imu, launchServo, sensorServos, wallSesor, pixelDelivery);
-    }
-
-    protected void init(Gamepad gamepad, DcMotor[] motors, Telemetry telemetry, IMU imu, Servo launchServo, Servo[] sensorServos, DistanceSensor wallSensor, PixelDelivery pixelDelivery) {
+    public MovementThread2(Gamepad gamepad,
+                           MecanumDrive drive,
+                           PlaneLauncher launch,
+                           Servo[] sensorServos,
+                           DistanceSensor wallSensor,
+                           PixelDelivery pixelDelivery,
+                           Telemetry telemetry) {
         this._gamepad = gamepad;
-
+        this._drive = drive;
+        this._launch = launch;
+        this._sensorServos = sensorServos;
+        this._wallSensor = wallSensor;
         this._pixelDelivery = pixelDelivery;
-        MecanumDriveParameters driveParameters = new MecanumDriveParameters();
-        driveParameters.telemetry = telemetry;
-        driveParameters.motors = motors;
-        driveParameters.ENCODER_WHEELS = new int[]{0, 1, 2, 3};
-        driveParameters.FREE_WHEELS = new int[]{0, 1, 2, 3};
-        driveParameters.REVERSED_WHEELS = new int[]{2, 3};
-        driveParameters.imu = imu;
-        _drive = new MecanumDriveImpl(driveParameters);
+        this._telemetry = telemetry;
 
         _Joy1Y = new MotorRampProfile(Constants.MecanumDrive.RAMP_RATE_J1X);
         _Joy1X = new MotorRampProfile(Constants.MecanumDrive.RAMP_RATE_J1Y);
         _Joy2X = new MotorRampProfile(Constants.MecanumDrive.RAMP_RATE_J2X);
 
-
-        _launch = new PlaneLauncher(launchServo);
-
-        _sensorServos = sensorServos;
-
-        _wallSensor = wallSensor;
-        _telemetry = telemetry;
-        T_wall = _telemetry.addData("Wall sensor", _wallSensor.getDistance(DistanceUnit.MM));
-
-
+        T_wall = _telemetry.addData("Wall sensor", wallSensor.getDistance(DistanceUnit.MM));
     }
 
     private double deadzone(double power, double zone) {
@@ -83,7 +62,7 @@ public class MovementThread extends RobotThread {
         double forward;
         _launch.reset();
         boolean drop = true;
-        Debounce buttona = new Debounce(250);
+        Debounce buttona = new Debounce(1000);
         while (!isCancelled()) {
 
             if (_gamepad.x && _gamepad.left_bumper) {
@@ -99,15 +78,17 @@ public class MovementThread extends RobotThread {
                         _pixelDelivery.leftPixelDrop();
                         _pixelDelivery.rightPixelDrop();
                         try {
-                            Thread.sleep(250);
+                            Thread.sleep(1000);
+                            _pixelDelivery.rightPixelReset();
+                            _pixelDelivery.leftPixelReset();
 
                         } catch (InterruptedException ignored) {
 
                         }
-                        _pixelDelivery.rightPixelResetForce();
-                        _pixelDelivery.leftPixelResetForce();
+
                     }
                 };
+                deploy.start();
             }
 
 
