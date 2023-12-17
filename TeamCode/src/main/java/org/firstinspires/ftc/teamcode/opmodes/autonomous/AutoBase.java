@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.threads.PixelDeliveryThread;
 import org.firstinspires.ftc.teamcode.util.Constants;
 import org.firstinspires.ftc.teamcode.util.RobotDevices;
 
-public class AutoLinearBase extends LinearOpMode {
+public class AutoBase extends LinearOpMode {
 
     protected RobotDevices robotDevices;
 
@@ -67,7 +67,8 @@ public class AutoLinearBase extends LinearOpMode {
                 robotDevices.rightPixelFlip,
                 robotDevices.sensorServos,
                 robotDevices.frontSensor,
-                robotDevices.rearSensor
+                robotDevices.rearSensor,
+                robotDevices.topDropServo
                 );
         _pixelDeliveryThread = new PixelDeliveryThread(_pixelDelivery);
 
@@ -75,6 +76,7 @@ public class AutoLinearBase extends LinearOpMode {
 
         T_pixelHold = telemetry.addData("PixelHold","0=(%f),1=(%f)",0.0,0.0);
         T_sensorServos = telemetry.addData("SensorServos", "0=(%f),1=(%f)",0.0,0.0);
+        _move.driveInit();
     }
 
     protected enum Direction {
@@ -108,7 +110,20 @@ public class AutoLinearBase extends LinearOpMode {
     //do nothing here
     }
 
+    public void pauseMillis(long millis) {
+        try {
+            Thread.sleep(millis);
+        }
+        catch (InterruptedException ignored) {
+        }
+    }
+
+    public void pauseSeconds(int seconds) {
+        pauseMillis((long)seconds * 1000);
+    }
+
     public void driveForward(double distanceInches) {
+;
         _move.driveForward(distanceInches*Constants.Y_DISTANCE_RATIO);
 
         T_IMU.setValue(_imu.getHeading());
@@ -137,14 +152,17 @@ public class AutoLinearBase extends LinearOpMode {
     }
 
     public void placePixel() {
-        _armSubSystem.raisePixelHold();
-        _armSubSystem.runBeltMillis(false, 1200);
-        _armSubSystem.lowerPixelHold();
+
+        _pixelDelivery.topDropServoPlace();
+        //_armSubSystem.raisePixelHold();
+        //_armSubSystem.runBeltMillis(false, 1200);
+        //_armSubSystem.lowerPixelHold();
     }
 
     public void unPlacePixel() {
-        _armSubSystem.raisePixelHold();
-        _armSubSystem.runBeltMillis(true, 1200);
+        _pixelDelivery.topDropServoUnPlace();
+        //_armSubSystem.raisePixelHold();
+        //_armSubSystem.runBeltMillis(true, 1200);
     }
 
 }

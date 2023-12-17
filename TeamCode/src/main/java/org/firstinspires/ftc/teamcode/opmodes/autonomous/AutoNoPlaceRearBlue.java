@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 @Autonomous(
         name = "Auto - Blue Rear - No Place"
 )
-public class AutoLinearBlueRearNoPlace extends AutoLineaRearBaseNoPlace {
+public class AutoNoPlaceRearBlue extends AutoNoPlaceRearBase {
 
 
 

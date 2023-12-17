@@ -103,6 +103,9 @@ public final class Constants {
     public static final int FRONT_SENSOR_DISTANCE_THRESHOLD=30, REAR_SENSOR_DISTANCE_THRESHOLD=20;
 
 
+    public static final double topPixelPlace=0.0;
+    public static final double topPixelReset=0.4;
+
 
     public static final class MecanumDrive {
         public static final double ZONE_LATERAL   = 0.2;
@@ -111,6 +114,7 @@ public final class Constants {
         public static final double RAMP_RATE_J1X  = 1.5;
         public static final double RAMP_RATE_J1Y  = 1.5;
         public static final double RAMP_RATE_J2X  =  1.5;
+        public static final int POSITION_TOLERENCE=10;
         //public static final double FINE_CONTROL   = 0.35;
     }
 }

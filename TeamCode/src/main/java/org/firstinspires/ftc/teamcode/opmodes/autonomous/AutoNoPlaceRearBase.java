@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.Constants;
 
-public class AutoLineaRearBaseNoPlace extends AutoLinearBase {
+public class AutoNoPlaceRearBase extends AutoBase {
 
 
     public void doAuto() throws InterruptedException {

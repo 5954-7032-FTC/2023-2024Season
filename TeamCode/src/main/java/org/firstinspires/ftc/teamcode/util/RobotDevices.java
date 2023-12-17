@@ -28,6 +28,7 @@ public class RobotDevices {
     public CRServo[] intakeServos;
     public Servo[] pixelHold;
     public Servo droneRelease;
+    public Servo topDropServo;
     public Servo[] sensorServos;
     public DistanceSensor frontSensor, rearSensor;
     //public Servo pixelFloor0, pixelFloor1;
@@ -76,8 +77,8 @@ public class RobotDevices {
         upperArmLimit = hardwareMap.touchSensor.get("ARM_UPPER_LIMIT");
         lowerArmLimit = hardwareMap.touchSensor.get("ARM_LOWER_LIMIT");
         intakeServos = new CRServo[] {
-                hardwareMap.crservo.get("INTAKE0"),
-                hardwareMap.crservo.get("INTAKE1")
+                hardwareMap.crservo.get("INTAKE0")//,
+                //hardwareMap.crservo.get("INTAKE1")
         };
         droneRelease = hardwareMap.servo.get("DRONE_RELEASE");
 
@@ -105,5 +106,7 @@ public class RobotDevices {
         droneRelease = hardwareMap.servo.get("DRONE_RELEASE");
 
         wallSensor = hardwareMap.get(DistanceSensor.class,"WALL_SENSOR");
+
+        topDropServo = hardwareMap.servo.get("TOPDROP");
     }
 }

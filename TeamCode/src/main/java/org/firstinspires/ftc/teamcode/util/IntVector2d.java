@@ -12,7 +12,7 @@ public class IntVector2d {
         return sum(this,v);
     }
 
-    public IntVector2d add ( IntVector2d ... values) {
+    public static IntVector2d add ( IntVector2d ... values) {
         int newx=0, newy=0;
         for (int i=0; i<values.length; i++) {
             newx += values[i]._x;

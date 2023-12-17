@@ -18,7 +18,8 @@ public class PixelDeliveryThread extends RobotThread {
                                Servo rightPixelFlip,
                                Servo[] sensorServos,
                                DistanceSensor frontSensor,
-                               DistanceSensor rearSensor) {
+                               DistanceSensor rearSensor,
+                               Servo topDropServo) {
         _pixelDelivery = new PixelDelivery(telemetry,
                 leftPixelArm,
                 leftPixelFlip,
@@ -26,7 +27,8 @@ public class PixelDeliveryThread extends RobotThread {
                 rightPixelFlip,
                 sensorServos,
                 frontSensor,
-                rearSensor);
+                rearSensor,
+                topDropServo);
     }
 
     public PixelDeliveryThread(PixelDelivery pixelDelivery) {

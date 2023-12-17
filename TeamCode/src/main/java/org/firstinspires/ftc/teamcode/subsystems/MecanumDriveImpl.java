@@ -120,7 +120,7 @@ public class MecanumDriveImpl implements MecanumDrive {
         RR = new IntVector2d(wheelMovements[WheelPositions.RearRight.position], wheelMovements[WheelPositions.RearRight.position]);
         RL = new IntVector2d(-wheelMovements[WheelPositions.RearLeft.position], wheelMovements[WheelPositions.RearLeft.position]);
 
-        IntVector2d result = FR.add(FL,RR,RL);
+        IntVector2d result = IntVector2d.add(FR,FL,RR,RL);
         _position.x += Math.cos(result.getLength()) * Constants.COUNTS_PER_INCH_FORWARD;
         _position.y += Math.sin(result.getLength()) * Constants.COUNTS_PER_INCH_FORWARD;
         _position.theta += result.getTheta();
@@ -184,7 +184,11 @@ public class MecanumDriveImpl implements MecanumDrive {
     }
 
     public void setMotorSpeeds(double [] speeds) {
-        for (int i = 0; i < _motors.length; i++) _motors[i].setPower(Range.clip(speeds[i], -1, 1));
+        _motors[0].setPower(Range.clip(speeds[0],-1,1));
+        _motors[1].setPower(Range.clip(speeds[1],-1,1));
+        _motors[2].setPower(Range.clip(speeds[2],-1,1));
+        _motors[3].setPower(Range.clip(speeds[3],-1,1));
+//        for (int i = 0; i < _motors.length; i++) _motors[i].setPower(Range.clip(speeds[i], -1, 1));
     }
 
     protected void setRunMode(int [] wheels, DcMotor.RunMode mode) {

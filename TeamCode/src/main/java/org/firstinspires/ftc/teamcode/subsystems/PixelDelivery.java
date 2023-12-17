@@ -14,6 +14,7 @@ public class PixelDelivery implements SubSystem{
     protected Servo [] _sensorServos;
     protected DistanceSensor _frontSensor, _rearSensor;
     protected final String sensorFormat = "FRONT(%.1f) REAR(%.1f)";
+    protected Servo _topDropServo;
 
     public PixelDelivery(Telemetry telemetry,
                          Servo leftPixelArm,
@@ -22,7 +23,8 @@ public class PixelDelivery implements SubSystem{
                          Servo rightPixelFlip,
                          Servo[] sensorServos,
                          DistanceSensor frontSensor,
-                         DistanceSensor rearSensor) {
+                         DistanceSensor rearSensor,
+                         Servo topDropServo) {
         this._leftPixelArm = leftPixelArm;
         this._leftPixelFlip = leftPixelFlip;
         this._rightPixelArm = rightPixelArm;
@@ -31,6 +33,7 @@ public class PixelDelivery implements SubSystem{
         this._frontSensor = frontSensor;
         this._rearSensor = rearSensor;
         this.T_sensorServos = telemetry.addData("Sensors","");
+        this._topDropServo = topDropServo;
     }
 
     public void updateTelemetry() {
@@ -106,6 +109,14 @@ public class PixelDelivery implements SubSystem{
     public void leftPixelDrop() {
         _leftPixelArm.setPosition(Constants.pixelDropPositions.LEFT_FRONT.pos);
         _leftPixelFlip.setPosition(Constants.pixelDropPositions.LEFT_FRONT.flipPos);
+    }
+
+    public void topDropServoPlace() {
+        _topDropServo.setPosition(Constants.topPixelPlace);
+
+    }
+    public  void  topDropServoUnPlace() {
+        _topDropServo.setPosition(Constants.topPixelReset);
     }
 
 }

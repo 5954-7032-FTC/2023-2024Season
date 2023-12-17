@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.util.Constants;
-import org.firstinspires.ftc.teamcode.util.PIDNew;
 
 public class MecanumDriveByGyro extends MecanumDriveImpl implements DriveRobot, Gyro {
 
@@ -70,20 +69,6 @@ public class MecanumDriveByGyro extends MecanumDriveImpl implements DriveRobot, 
         return imu.getOrientation().firstAngle;
     }
 
-    public void turnToPID(double degrees) {
-        PIDNew mypid;
-        mypid = new PIDNew(degrees,1,0,0.003) {
-            @Override
-            public double getPTerm(double current) {
-                double error = degrees - current;
-                error = (error%360+360)%360;
-                if (error>1) {
-
-                }
-                return error;
-            }
-        };
-    }
 
 
 
@@ -128,12 +113,16 @@ public class MecanumDriveByGyro extends MecanumDriveImpl implements DriveRobot, 
     @Override
     public void driveRight(double distance) { driveRobot(distance, Constants.LATERAL_RIGHT_VALUES);}
 
+    public void driveInit() {
+        setRunMode(_ENCODER_WHEELS, DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
     public void driveRobot(double inches, int [] direction) {
         // Determine new target position, and pass to motor controller
         int moveCounts = moveCounts(inches);
-        setTargetPositions(moveCounts, direction);
+        int [] targets = setTargetPositions(moveCounts, direction);
 
-        setRunMode(_ENCODER_WHEELS, DcMotor.RunMode.RUN_TO_POSITION);
+        //setRunMode(_ENCODER_WHEELS, DcMotor.RunMode.RUN_TO_POSITION);
         // Set the required driving speed  (must be positive? (nope) for RUN_TO_POSITION)
         // Start driving straight, and then enter the control loop
 
@@ -142,7 +131,8 @@ public class MecanumDriveByGyro extends MecanumDriveImpl implements DriveRobot, 
         targetHeading = fixHeadingToZero?0.0:imu.getHeading();
 
         // keep looping while we are still active, and BOTH motors are running.
-        while (leftIsBusy() && rightIsBusy()) {
+        //while (leftIsBusy() && rightIsBusy()) {
+        while (!checkTargetReached(targets, Constants.MecanumDrive.POSITION_TOLERENCE)) {
 
             // Determine required steering to keep on heading
             turnSpeed = direction[4] * getSteeringCorrection(robotHeading, Constants.P_DRIVE_GAIN);
@@ -153,8 +143,9 @@ public class MecanumDriveByGyro extends MecanumDriveImpl implements DriveRobot, 
         }
 
         // Stop all motion & Turn off RUN_TO_POSITION
-        moveRobotDirection(0, 0, Constants.FORWARD_VALUES);
-        setRunMode(_ENCODER_WHEELS, DcMotor.RunMode.RUN_USING_ENCODER);
+        stopRobot();
+        //moveRobotDirection(0, 0, Constants.FORWARD_VALUES);
+        //setRunMode(_ENCODER_WHEELS, DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     double targetHeading;
@@ -196,15 +187,21 @@ public class MecanumDriveByGyro extends MecanumDriveImpl implements DriveRobot, 
             moveRobotDirection(0, turnSpeed,Constants.FORWARD_VALUES);
         }
         // Stop all motion;
-        moveRobotDirection(0, 0,Constants.FORWARD_VALUES);
+       stopRobot();
     }
 
-    public boolean leftIsBusy() {  // return true if either is busy.
+/*    public boolean leftIsBusy() {  // return true if either is busy.
         return (_motors[1].isBusy() || _motors[3].isBusy());
     }
 
+
+ */
     public int moveCounts(double distance) {
         return (int)(distance * Constants.COUNTS_PER_INCH_FORWARD);
+    }
+
+    public void stopRobot() {
+        setMotorSpeeds(new double[] {0.0,0.0,0.0,0.0});
     }
 
     public void moveRobotDirection(double power, double rotate, int [] direction) {
@@ -226,23 +223,34 @@ public class MecanumDriveByGyro extends MecanumDriveImpl implements DriveRobot, 
     public void resetHeading() {
         // Save a new heading offset equal to the current raw heading.
         imu.resetHeading();
-        robotHeading = 0;
+        robotHeading = 0;    }
+
+/*    public boolean rightIsBusy() {
+        return (_motors[0].isBusy() || _motors[2].isBusy());
     }
 
-    public boolean rightIsBusy() {
-        return (_motors[0].isBusy() || _motors[2].isBusy());
+
+ */
+    public boolean checkTargetReached(int [] targets, int tolerance) {
+        for (int i=0; i< _ENCODER_WHEELS.length; i++) {
+            if (Math.abs(_motors[i].getCurrentPosition() - targets[i]) <= tolerance ) return true;
+        }
+        return false;
     }
 
     public int rotateCounts(double degrees) {
         return (int)Math.round((degrees * Constants.COUNTS_PER_ROTATE)/360);
     }
 
-    public void setTargetPositions(int target, int [] directions) {
+    public int [] setTargetPositions(int target, int [] directions) {
+        int [] targets = new int[4];
         for (int i=0; i<_ENCODER_WHEELS.length; i++) {
-            _motors[i].setTargetPosition(_motors[i].getCurrentPosition() + target * directions[i]);
+            targets[i]=_motors[i].getCurrentPosition() + target * directions[i];
+            _motors[i].setTargetPosition(targets[i]);
         }
+        return targets;
     }
-
+/*
     public void turnToHeading(double maxTurnSpeed, double heading) {
 
         int loop_count=0;
@@ -266,9 +274,11 @@ public class MecanumDriveByGyro extends MecanumDriveImpl implements DriveRobot, 
         moveRobotDirection(0, 0, Constants.FORWARD_VALUES);
     }
 
+ */
+
     // CCW == positive degrees
     // CW == negative degrees
-    public void turnRobot(double degrees) {
+/*    public void turnRobot(double degrees) {
 // Determine new target position, and pass to motor controller
 
         int moveCounts = rotateCounts(degrees);
@@ -283,7 +293,7 @@ public class MecanumDriveByGyro extends MecanumDriveImpl implements DriveRobot, 
         moveRobotDirection(0, 0, Constants.FORWARD_VALUES);
         setRunMode(_ENCODER_WHEELS, DcMotor.RunMode.RUN_USING_ENCODER);
     }
-
+*/
 
     public void setFixHeadingToZero() {
         fixHeadingToZero =  true;
